@@ -13,7 +13,8 @@ This module formalizes the exact part of equation (30).  One active axon selects
 uniform `p`-element subset of `n` targets; an `m`-axon sample is an element of the
 finite Cartesian power of that choice set, so independence across axons is built into
 the uniform product average.  The exponential replacement receives a quantitative
-error theorem; the two-message approximation remains a separate conditional interface.
+error theorem. The additional two-message independence premise is realized by a
+separate product experiment but is not inferred for biological messages.
 -/
 
 open scoped BigOperators
@@ -456,6 +457,170 @@ theorem TwoMessageTargetModel.expectedOverlap_eq_sq_div
       simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
         nsmul_eq_mul]
       field_simp [pow_two]
+
+/-! ## Concrete independent two-message experiment -/
+
+/-- Two messages sampled independently from the exact finite occupancy experiment. -/
+def twoMessageOccupancySamples (n m p : ℕ) :
+    Finset ((Fin m → Finset (Fin n)) × (Fin m → Finset (Fin n))) :=
+  occupancySamples n m p ×ˢ occupancySamples n m p
+
+/-- Targets reached by both messages in a joint sample. -/
+def occupiedOverlapTargets {n m : ℕ}
+    (samples : (Fin m → Finset (Fin n)) × (Fin m → Finset (Fin n))) :
+    Finset (Fin n) :=
+  occupiedTargets samples.1 ∩ occupiedTargets samples.2
+
+/-- Number of targets reached by both messages in a joint sample. -/
+def occupiedOverlapCount {n m : ℕ}
+    (samples : (Fin m → Finset (Fin n)) × (Fin m → Finset (Fin n))) : ℕ :=
+  (occupiedOverlapTargets samples).card
+
+/-- Exact expected target overlap for two independently sampled messages. -/
+def expectedOccupiedOverlap (n m p : ℕ) : ℝ :=
+  𝔼 samples ∈ twoMessageOccupancySamples n m p,
+    (occupiedOverlapCount samples : ℝ)
+
+/-- An overlap count is the sum of products of the two messages' target-hit
+indicators. -/
+theorem cast_occupiedOverlapCount_eq_sum_indicators {n m : ℕ}
+    (samples : (Fin m → Finset (Fin n)) × (Fin m → Finset (Fin n))) :
+    (occupiedOverlapCount samples : ℝ) =
+      ∑ target, targetOccupiedIndicator samples.1 target *
+        targetOccupiedIndicator samples.2 target := by
+  classical
+  calc
+    (occupiedOverlapCount samples : ℝ) =
+        ∑ target ∈ (Finset.univ : Finset (Fin n)),
+          if target ∈ occupiedOverlapTargets samples then (1 : ℝ) else 0 := by
+      rw [occupiedOverlapCount, Finset.sum_boole]
+      congr 2
+      ext target
+      simp [occupiedOverlapTargets]
+    _ = ∑ target, targetOccupiedIndicator samples.1 target *
+          targetOccupiedIndicator samples.2 target := by
+      apply Finset.sum_congr rfl
+      intro target _htarget
+      rw [targetOccupiedIndicator_eq, targetOccupiedIndicator_eq]
+      by_cases hfirst : target ∈ occupiedTargets samples.1 <;>
+        by_cases hsecond : target ∈ occupiedTargets samples.2 <;>
+        simp [occupiedOverlapTargets, hfirst, hsecond]
+
+/-- The abstract two-message model induced by the concrete independent product
+experiment. -/
+def independentOccupancyTargetModel (n m p : ℕ) :
+    TwoMessageTargetModel n where
+  firstHitProbability := fun target =>
+    𝔼 sample ∈ occupancySamples n m p, targetOccupiedIndicator sample target
+  secondHitProbability := fun target =>
+    𝔼 sample ∈ occupancySamples n m p, targetOccupiedIndicator sample target
+  jointHitProbability := fun target =>
+    𝔼 samples ∈ twoMessageOccupancySamples n m p,
+      targetOccupiedIndicator samples.1 target *
+        targetOccupiedIndicator samples.2 target
+
+/-- Cartesian-product sampling constructively supplies the targetwise independence
+premise. -/
+theorem independentOccupancyTargetModel_targetwiseIndependent (n m p : ℕ) :
+    (independentOccupancyTargetModel n m p).TargetwiseIndependent := by
+  intro target
+  change (𝔼 samples ∈ twoMessageOccupancySamples n m p,
+      targetOccupiedIndicator samples.1 target *
+        targetOccupiedIndicator samples.2 target) =
+    (𝔼 sample ∈ occupancySamples n m p,
+      targetOccupiedIndicator sample target) *
+    (𝔼 sample ∈ occupancySamples n m p,
+      targetOccupiedIndicator sample target)
+  rw [twoMessageOccupancySamples, Finset.expect_product]
+  change (𝔼 first ∈ occupancySamples n m p,
+      𝔼 second ∈ occupancySamples n m p,
+        targetOccupiedIndicator first target *
+          targetOccupiedIndicator second target) = _
+  rw [← Finset.expect_mul_expect]
+
+/-- Each target has marginal hit probability equal to the exact expected occupied
+count divided by the target population size. -/
+theorem independentOccupancyTargetModel_hasUniformMarginals
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    (independentOccupancyTargetModel n m p).HasUniformMarginals
+      (exactOccupancyFormula n m p) := by
+  intro target
+  change (𝔼 sample ∈ occupancySamples n m p,
+      targetOccupiedIndicator sample target) = exactOccupancyFormula n m p / (n : ℝ) ∧
+    (𝔼 sample ∈ occupancySamples n m p,
+      targetOccupiedIndicator sample target) = exactOccupancyFormula n m p / (n : ℝ)
+  rw [targetOccupiedExpectation hn hp]
+  constructor <;> unfold exactOccupancyFormula <;> field_simp
+
+/-- The target-model overlap is exactly the expected cardinality of the concrete
+intersection experiment. -/
+theorem independentOccupancyTargetModel_expectedOverlap_eq
+    (n m p : ℕ) :
+    (independentOccupancyTargetModel n m p).expectedOverlap =
+      expectedOccupiedOverlap n m p := by
+  unfold TwoMessageTargetModel.expectedOverlap independentOccupancyTargetModel
+  rw [expectedOccupiedOverlap]
+  calc
+    (∑ target : Fin n,
+        𝔼 samples ∈ twoMessageOccupancySamples n m p,
+          targetOccupiedIndicator samples.1 target *
+            targetOccupiedIndicator samples.2 target) =
+        𝔼 samples ∈ twoMessageOccupancySamples n m p,
+          ∑ target, targetOccupiedIndicator samples.1 target *
+            targetOccupiedIndicator samples.2 target := by
+      exact (Finset.expect_sum_comm _ _ _).symm
+    _ = 𝔼 samples ∈ twoMessageOccupancySamples n m p,
+          (occupiedOverlapCount samples : ℝ) := by
+      apply Finset.expect_congr rfl
+      intro samples _hsamples
+      exact (cast_occupiedOverlapCount_eq_sum_indicators samples).symm
+
+/-- Under literal independent product sampling, the expected overlap following
+equation (30) is exactly `q²/n`, with `q` equal to the exact one-message expected
+occupancy. -/
+theorem expectedOccupiedOverlap_eq_sq_div
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    expectedOccupiedOverlap n m p =
+      exactOccupancyFormula n m p ^ 2 / (n : ℝ) := by
+  rw [← independentOccupancyTargetModel_expectedOverlap_eq]
+  exact TwoMessageTargetModel.expectedOverlap_eq_sq_div
+    (independentOccupancyTargetModel n m p) hn
+    (independentOccupancyTargetModel_targetwiseIndependent n m p)
+    (independentOccupancyTargetModel_hasUniformMarginals hn hp)
+
+/-! ### Two-message parameter boundaries -/
+
+theorem twoMessageOccupancySamples_eq_empty_of_invalid
+    {n m p : ℕ} (hm : 0 < m) (hp : n < p) :
+    twoMessageOccupancySamples n m p = ∅ := by
+  rw [twoMessageOccupancySamples, occupancySamples_eq_empty_of_invalid hm hp]
+  simp
+
+theorem expectedOccupiedOverlap_eq_zero_of_invalid
+    {n m p : ℕ} (hm : 0 < m) (hp : n < p) :
+    expectedOccupiedOverlap n m p = 0 := by
+  rw [expectedOccupiedOverlap,
+    twoMessageOccupancySamples_eq_empty_of_invalid hm hp]
+  exact Finset.expect_empty _
+
+theorem expectedOccupiedOverlap_zero_targets (m p : ℕ) :
+    expectedOccupiedOverlap 0 m p = 0 := by
+  simp [expectedOccupiedOverlap, twoMessageOccupancySamples,
+    occupiedOverlapCount, occupiedOverlapTargets, occupiedTargets]
+
+theorem expectedOccupiedOverlap_zero_axons (n p : ℕ) :
+    expectedOccupiedOverlap n 0 p = 0 := by
+  simp [expectedOccupiedOverlap, twoMessageOccupancySamples,
+    occupiedOverlapCount, occupiedOverlapTargets, occupiedTargets]
+
+theorem expectedOccupiedOverlap_zero_collaterals (n m : ℕ) :
+    expectedOccupiedOverlap n m 0 = 0 := by
+  by_cases hn : n = 0
+  · subst n
+    exact expectedOccupiedOverlap_zero_targets m 0
+  · rw [expectedOccupiedOverlap_eq_sq_div
+      (Nat.pos_of_ne_zero hn) (Nat.zero_le n)]
+    simp [exactOccupancyFormula]
 
 end
 

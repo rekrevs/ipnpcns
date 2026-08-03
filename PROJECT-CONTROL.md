@@ -828,3 +828,45 @@
   - The concrete two-message overlap theorem compiles.
   - The product model reveals a mismatch between `q` as an expectation and targetwise
     uniform marginals.
+
+## PCR-2026-08-03-022
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: direction-review
+- Trigger: T-0025 constructed the independent two-message product experiment and
+  proved exact expected overlap `q²/n`, completing the last compact theorem target
+  selected from the rendered-paper interpretation.
+- Control judgement: redirect, evaluate, preserve
+- Current gate: Source fidelity is now more limiting than theorem construction. The
+  remaining entries in `MODEL-OBLIGATIONS.md` concern underspecified stochastic or
+  biological premises, a full Laplace-transform development, generic kernel theory,
+  or intrinsic polyhedral-face machinery; none is a small missing proof of an already
+  precise central claim.
+- Recommendation: Close the current proof-expansion phase and release T-0022. Audit
+  every claimed equation, qualification, and model boundary against the LaTeX source
+  archive. Treat every material discrepancy as grounds to reopen and correct the
+  affected formalization before either report is written.
+- Owner decision required: none; PCD-2026-08-03-002 explicitly approves this source
+  audit after proof closure and all corrective work it reveals.
+- Evidence:
+  - `MODEL-OBLIGATIONS.md`
+  - `IPNPCNS/Probability/Occupancy.lean`
+  - `wotan/dev-log/T-0025.md`
+  - `wotan/backlog.json`
+  - Complete `lake build` of 2960 jobs
+- Uncertainty:
+  - The LaTeX archive may expose source details that invalidate the present closure
+    judgement and create new mandatory proof tasks.
+  - “Complete” here means complete for the project's precise theorem scope, not that
+    Lean establishes the empirical CNS interpretation or every research pointer in the
+    paper.
+- Proposed actions:
+  - Mark T-0025 done and T-0022 ready.
+  - Inventory and reconstruct the source archive without tracking it in Git.
+  - Build a source-to-Lean traceability record and reopen proof work on every material
+    finding.
+- Revisit when:
+  - T-0022 completes the full source-conformance audit.
+  - Any archive finding changes a formula, assumption, equation mapping, or claimed
+    coverage.

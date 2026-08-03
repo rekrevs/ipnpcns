@@ -189,12 +189,11 @@
     },
     {
       "id": "T-0022",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0025"
       ],
-      "blocker": "The proof formalization phase has not yet reached its project-control closure checkpoint; keep this dependency attached to the final proof task.",
       "summary": "Audit the formalization against the LaTeX source archive"
     },
     {
@@ -219,7 +218,7 @@
     },
     {
       "id": "T-0025",
-      "status": "READY",
+      "status": "DONE",
       "size": "M",
       "after": [
         "T-0021"

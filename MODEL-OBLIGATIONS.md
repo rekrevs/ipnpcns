@@ -157,10 +157,14 @@ invalid parameter cases are separate theorems.
 The exponential replacement is now quantitatively certified rather than merely
 postulated. For `0 < n` and `p ≤ n`, it underestimates the exact finite expectation,
 and the absolute gap is at most `m p² / n`. This is a finite, uniform inequality, not
-an untracked asymptotic convention. The `q² / n` two-message overlap still follows
-only from separately supplied uniform-marginal and targetwise-independence premises.
-Those premises remain modeling approximations, not consequences about biological
-messages.
+an untracked asymptotic convention.
+
+The `q² / n` two-message overlap now has both an abstract conditional theorem and a
+concrete exact realization. Sampling two messages independently from the Cartesian
+product of the finite experiment supplies targetwise independence structurally, and
+Lean proves expected intersection size `q² / n` with
+`q = exactOccupancyFormula n m p`. This does not infer that biological messages are
+independent; applying the product law to them remains a modeling approximation.
 
 ## Empirical boundary
 
