@@ -354,3 +354,38 @@
     estimate in the absence of directional coverage.
 - Revisit when:
   - T-0012 settles the infimum/minimum representation and coverage theorem.
+
+## PCR-2026-08-03-011
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0012 completed the exact cone similarity, angular consequences, finite
+  normalized-frame proxy, and coverage-error theorem (92).
+- Control judgement: continue, operate
+- Current gate: Equation (30) mixes an exact occupancy expectation with an
+  exponential approximation and a second, explicitly additional overlap
+  approximation.
+- Recommendation: Execute T-0013 next. Model each active axon as choosing a uniform
+  `p`-subset of `n` targets, independently across the `m` axons. Prove the occupied
+  target expectation by indicator variables. Keep the exponential replacement and
+  two-message overlap as separately named approximations or conditional error
+  interfaces rather than equalities.
+- Owner decision required: none; the paper explicitly states the sampling and
+  approximation boundaries.
+- Evidence:
+  - `IPNPCNS/Cone/Comparison.lean`
+  - `wotan/dev-log/T-0012.md`
+  - equation (30) and its surrounding paragraph in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Mathlib's uniform finite-subset probability API may be heavier than a direct
+    finite probability-mass-function model.
+  - A quantitative exponential approximation is optional unless it can be obtained
+    with a short, explicit bound; it must not obscure the exact expectation.
+- Proposed actions:
+  - Execute T-0013 using finite indicator expectations and explicit parameter guards
+    `p ≤ n`.
+  - Treat `n = 0`, `m = 0`, and impossible collateral counts explicitly.
+- Revisit when:
+  - T-0013 establishes the exact occupancy theorem and fixes the approximation
+    interfaces.

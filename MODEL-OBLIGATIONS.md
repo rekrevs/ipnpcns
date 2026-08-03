@@ -69,6 +69,19 @@ when the condition cone is zero, and strong inhibition passes or blocks the sign
 specified.  Lean does not supply a biological emptiness detector, synchronization
 mechanism, or inhibitory dynamics from those propositions.
 
+## Cone comparison and finite frames
+
+`IPNPCNS/Cone/Comparison.lean` verifies the inclusion-by-empty-rejection test and
+equations (87)--(92). Exact similarity is an infimum over nonzero unit directions;
+its range, identity, polar-zero, and angular consequences require both cones to be
+nonzero. Finite frames are represented by nonempty finite index types whose raw rays
+are nonzero cone members, and normalization is proved rather than assumed.
+
+The finite proxy is always optimistic. Its `γ` error theorem requires a named
+`FrameCoverage` premise in both directions. The development does not infer that a
+learned or sampled biological frame has such coverage, and states no uniform proxy
+guarantee without it.
+
 ## Empirical boundary
 
 Lean does not establish that biological neuron populations satisfy the model

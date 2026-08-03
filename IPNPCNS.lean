@@ -7,6 +7,7 @@ import IPNPCNS.Cone.DoubleRejection
 import IPNPCNS.Cone.Intersection
 import IPNPCNS.Cone.Examples
 import IPNPCNS.Cone.Laws
+import IPNPCNS.Cone.Comparison
 import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Subspace.Basic
