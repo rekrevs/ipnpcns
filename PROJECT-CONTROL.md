@@ -679,3 +679,46 @@
   - The exact integral decomposition and quadratic norm bound compile.
   - Vector-valued integration reveals a missing hypothesis that changes the model
     interpretation.
+
+## PCR-2026-08-03-019
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0020 derived equation (33)'s quadratic remainder from the exact
+  exponential low-pass step under an explicit Lipschitz-drive premise, leaving the
+  Wotan queue empty.
+- Control judgement: continue, operate, preserve
+- Current gate: The exponential replacement following equation (30) remains an
+  `ExponentialOccupancyErrorBound` premise even though the exact finite occupancy
+  theorem is complete. This is the smallest remaining deterministic approximation
+  with a clear quantitative endpoint.
+- Recommendation: Create and execute T-0021. For `0 < n` and `p ≤ n`, put
+  `x = p/n`. Use `1-x ≤ exp(-x)`, the second-order exponential remainder on
+  `0 ≤ x ≤ 1`, and a finite power-difference estimate to prove that the
+  exponential occupancy approximation underestimates the exact occupancy by at most
+  `m p²/n`. Instantiate the existing error interface with this explicit bound.
+- Owner decision required: none; the approximation and its parameter regime are
+  already in project scope, and the theorem strengthens an existing visible premise
+  without changing the sampling model.
+- Evidence:
+  - `IPNPCNS/Probability/Occupancy.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0013.md`
+  - `wotan/dev-log/T-0020.md`
+  - Equation (30) and its approximation sign in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Mathlib may not package the exact finite power-difference inequality in the needed
+    real interval form; a short induction should suffice.
+  - The bound is intentionally elementary and may not be asymptotically sharp for
+    large occupancy ratios, but it is explicit, uniform over valid parameters, and
+    vanishes in the sparse regime at the expected order.
+- Proposed actions:
+  - Add T-0021 after T-0020.
+  - Prove the local one-step exponential error and lift it through the `m`th power.
+  - Translate the result to `exactOccupancyFormula`,
+    `exponentialOccupancyApproximation`, and the exact expectation theorem.
+  - Retain zero and invalid parameter cases as the separate theorems already present.
+- Revisit when:
+  - The signed and absolute occupancy-error bounds compile.
+  - The power estimate exposes a parameter restriction stronger than `p ≤ n`.

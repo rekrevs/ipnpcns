@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 21,
+  "next_id": 22,
   "tasks": [
     {
       "id": "T-0001",
@@ -171,12 +171,21 @@
     },
     {
       "id": "T-0020",
-      "status": "TODO",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0019"
       ],
       "summary": "Derive the membrane update quadratic remainder"
+    },
+    {
+      "id": "T-0021",
+      "status": "READY",
+      "size": "M",
+      "after": [
+        "T-0020"
+      ],
+      "summary": "Bound the exponential occupancy approximation"
     }
   ]
 }

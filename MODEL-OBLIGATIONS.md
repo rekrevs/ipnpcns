@@ -36,6 +36,13 @@ inhabits `ConvolutionHypotheses`, `HasFiniteRankApproximations`, and
 `CompactFilterPremise` with those proofs.  Periodic and whole-line zero-extension
 operators are explicitly not identified with this causal construction.
 
+`IPNPCNS/Signal/Membrane.lean` gives equation (33)'s remainder a concrete source. It
+defines the exact exponentially weighted first-order low-pass step, proves that the
+kernel integrates to `λ = 1 - exp(-Δt/τ)`, and recovers the displayed frozen-input
+update exactly for constant drive. If the net excitation-minus-inhibition drive is
+`L`-Lipschitz on a nonnegative step and `0 < τ`, the remaining Bochner integral
+constructs a `QuadraticRemainder` with norm at most `(L/τ)|Δt|²`.
+
 The following broader analytic claims remain deliberately conditional:
 
 - identifying an arbitrary bounded operator with another truncated convolution still
@@ -47,8 +54,9 @@ The following broader analytic claims remain deliberately conditional:
   `HasFiniteRankApproximations`;
 - equation (32) requires a concrete transform and gain satisfying the named
   `TransferIdentity` premise;
-- the `O(Δt²)` in equation (33) is an explicit `QuadraticRemainder`, not a conclusion
-  about the biological dynamics without differentiability and time-scale premises.
+- equation (33)'s derived quadratic bound requires the explicit Lipschitz-drive
+  premise; arbitrary recording-window `L²` signals and biological dynamics do not
+  acquire that pointwise regularity automatically.
 
 `IPNPCNS/Examples/OrthonormalWavelets.lean` now verifies the paper's separate exact
 example. It uses the stated `T = 0.20 s` window, zero-extended `sin²(πt/T)` envelope,
