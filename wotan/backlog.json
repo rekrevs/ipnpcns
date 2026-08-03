@@ -1,0 +1,36 @@
+{
+  "version": "2.1.0",
+  "next_id": 6,
+  "tasks": [
+    {
+      "id": "T-0001",
+      "status": "DONE",
+      "size": "L",
+      "summary": "Assess Lean formalization feasibility of the CNS model"
+    },
+    {
+      "id": "T-0002",
+      "status": "IDEA",
+      "size": "M",
+      "summary": "Freeze the formal specification and pilot scope"
+    },
+    {
+      "id": "T-0003",
+      "status": "IDEA",
+      "size": "L",
+      "summary": "Formalize Moreau decomposition and double rejection in Lean"
+    },
+    {
+      "id": "T-0004",
+      "status": "IDEA",
+      "size": "L",
+      "summary": "Formalize the cone intersection identity and deterministic invariance bounds"
+    },
+    {
+      "id": "T-0005",
+      "status": "IDEA",
+      "size": "L",
+      "summary": "Extend the formalization to NNLS and the conditional population model"
+    }
+  ]
+}
