@@ -538,3 +538,49 @@
 - Revisit when:
   - T-0017 has either verified the exact finite dictionary or identified a concrete
     counterexample in the paper's stated convention.
+
+## PCR-2026-08-03-016
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0017 verified the paper's exact finite Hann-window dictionary, including
+  its normalization, orthonormality, zero means, three NNLS examples, and explicit
+  baseline-subtraction convention.
+- Control judgement: continue, operate, preserve
+- Current gate: The remaining approved analytic gap is T-0018: T-0014 deliberately
+  left concrete finite-window convolution and compactness behind named interfaces.
+  T-0017 exposed no contradiction or dependency that should displace that gate.
+- Recommendation: Execute T-0018 next with the causal-truncation convention. Start
+  from the nontrivial unit-step impulse response, whose operator is the Volterra map
+  `x ↦ (t ↦ ∫ s in 0..t, x s)`. Construct it on recording-window `L²`, prove a
+  concrete norm bound, and prove compactness through uniform finite-rank step
+  approximants. Treat this as a concrete witness for the paper's compact-filter
+  claim, not as a theorem that every unspecified boundary convention agrees with it.
+- Owner decision required: none; T-0018 was already approved by
+  PCD-2026-08-03-001 and PCR-2026-08-03-013.
+- Evidence:
+  - `IPNPCNS/Examples/OrthonormalWavelets.lean`
+  - `IPNPCNS/Signal/Deterministic.lean`
+  - `wotan/dev-log/T-0017.md`
+  - `wotan/dev-log/T-0018.md`
+  - `MODEL-OBLIGATIONS.md`
+- Uncertainty:
+  - Mathlib 4.31 has no packaged Hilbert--Schmidt integral-operator layer.
+  - A direct all-`L²`-kernel theorem would require a substantially broader product-
+    measure and kernel-approximation development than the concrete existence claim.
+  - The finite-rank approximants must be connected to an actual causal integral
+    representative, not merely to an abstract compact operator.
+- Proposed actions:
+  - Close and preserve T-0017.
+  - Activate T-0018 and make the causal boundary and unit-step kernel explicit in its
+    approach before implementation.
+  - Prove the Volterra operator by bounded extension or an equivalent representative-
+    independent `L²` construction, then establish finite-rank approximation in
+    operator norm and instantiate T-0014's interfaces.
+  - Record general square-integrable-kernel compactness as a follow-on only if T-0018
+    demonstrates that it can be stated without hiding the boundary convention.
+- Revisit when:
+  - A nonzero causal convolution operator and its compactness proof compile.
+  - The finite-rank approximation route exposes a missing theorem that changes the
+    appropriate scope.

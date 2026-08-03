@@ -41,8 +41,15 @@ The following analytic claims remain deliberately conditional:
 - the `O(Δt²)` in equation (33) is an explicit `QuadraticRemainder`, not a conclusion
   about the biological dynamics without differentiability and time-scale premises.
 
-The finite wavelet dictionary and its claimed orthonormality can be verified as a
-separate exact example; they are not needed for the abstract deterministic layer.
+`IPNPCNS/Examples/OrthonormalWavelets.lean` now verifies the paper's separate exact
+example. It uses the stated `T = 0.20 s` window, zero-extended `sin²(πt/T)` envelope,
+30-Hz cosine and sine carriers, 60-Hz cosine carrier, and normalization
+`4 / sqrt(3T)`. The resulting `L²` wavelets have zero mean and identity Gram matrix.
+The three coordinate/NNLS examples, unique optimal coefficients, signed residuals,
+and neuronal-output signs are proved exactly. Literal firing-rate baselines remain a
+separate pointwise convention and are subtracted before the `L²` calculations; the
+formalization does not claim that arbitrary baseline/amplitude choices give
+nonnegative literal rates.
 
 ## NNLS and learning
 

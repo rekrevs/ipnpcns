@@ -142,7 +142,7 @@
     },
     {
       "id": "T-0017",
-      "status": "PENDING",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0014",

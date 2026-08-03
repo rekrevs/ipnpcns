@@ -8,6 +8,7 @@ import IPNPCNS.Cone.Intersection
 import IPNPCNS.Cone.Examples
 import IPNPCNS.Cone.Laws
 import IPNPCNS.Cone.Comparison
+import IPNPCNS.Examples.OrthonormalWavelets
 import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Subspace.Basic
