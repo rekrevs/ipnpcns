@@ -55,6 +55,20 @@ certificates. A more intrinsic or empirical account still requires:
 
 The present theorems verify equations (206)–(208) from those explicit premises.
 
+## Exact cone circuits and conditionals
+
+`IPNPCNS/Cone/Laws.lean` verifies equations (93)--(97), defines closed-cone
+reflection, and proves the reflection/rejection law (209).  In particular, reflection
+is implemented mathematically as pullback along the isometric map `x \mapsto -x`, so
+it preserves both closedness and the paper's non-positive polar convention.
+
+`IPNPCNS/Model/Circuits.lean` defines the ideal population primitive from (176) and
+proves the projection and intersection circuit expansions in Figure 9.  Its theorem
+for (210) is conditional on two explicit propositions: the control is inactive exactly
+when the condition cone is zero, and strong inhibition passes or blocks the signal as
+specified.  Lean does not supply a biological emptiness detector, synchronization
+mechanism, or inhibitory dynamics from those propositions.
+
 ## Empirical boundary
 
 Lean does not establish that biological neuron populations satisfy the model

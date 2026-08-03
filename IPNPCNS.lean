@@ -6,6 +6,7 @@ import IPNPCNS.Cone.Operations
 import IPNPCNS.Cone.DoubleRejection
 import IPNPCNS.Cone.Intersection
 import IPNPCNS.Cone.Examples
+import IPNPCNS.Cone.Laws
 import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Subspace.Basic
@@ -18,3 +19,4 @@ import IPNPCNS.Learning.NNLSConvergence
 import IPNPCNS.Learning.NNLSSpectral
 import IPNPCNS.Model.Population
 import IPNPCNS.Model.ActiveFace
+import IPNPCNS.Model.Circuits

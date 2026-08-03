@@ -321,3 +321,36 @@
 - Revisit when:
   - T-0011 closes the exact cone/circuit layer.
   - T-0016 selects its convergence mechanism.
+
+## PCR-2026-08-03-010
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0011 completed equations (93)--(97), reflection law (209), the exact
+  primitive projection/intersection circuits, and conditional equation (210).
+- Control judgement: continue, operate
+- Current gate: T-0012 must make the nonempty unit-direction and finite-frame
+  conventions in equations (87)--(92) explicit before their infima and minima can be
+  compared.
+- Recommendation: Execute T-0012 next. Define exact directional similarity and the
+  finite proxy with explicit witnesses, prove the unit interval and polar-zero
+  statements, and derive the one-sided coverage error from metric-projection
+  nonexpansiveness. Keep empty cones and empty frames outside the main theorem.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes continuation and the
+  paper already states that the empty cone is handled separately.
+- Evidence:
+  - `IPNPCNS/Cone/Laws.lean`
+  - `IPNPCNS/Model/Circuits.lean`
+  - `wotan/dev-log/T-0011.md`
+- Uncertainty:
+  - A direct `sInf` formulation may require explicit boundedness and nonemptiness
+    lemmas, while finite proxy minima need nonempty finite frames.
+  - The angular form (89) should remain a derived definition unless an arccos theorem
+    adds scientific value beyond the similarity bounds.
+- Proposed actions:
+  - Execute T-0012.
+  - Preserve the exact versus proxy distinction and do not assert a uniform error
+    estimate in the absence of directional coverage.
+- Revisit when:
+  - T-0012 settles the infimum/minimum representation and coverage theorem.

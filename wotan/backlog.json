@@ -88,7 +88,7 @@
     },
     {
       "id": "T-0011",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0010"
@@ -97,7 +97,7 @@
     },
     {
       "id": "T-0012",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0011"
