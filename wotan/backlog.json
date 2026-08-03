@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 16,
+  "next_id": 17,
   "tasks": [
     {
       "id": "T-0001",
@@ -79,7 +79,7 @@
     },
     {
       "id": "T-0010",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0009"
@@ -88,7 +88,7 @@
     },
     {
       "id": "T-0011",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0010"
@@ -130,6 +130,15 @@
         "T-0009"
       ],
       "summary": "Add Moore-Penrose projector representations"
+    },
+    {
+      "id": "T-0016",
+      "status": "READY",
+      "size": "L",
+      "after": [
+        "T-0010"
+      ],
+      "summary": "Prove rank-deficient projected NNLS convergence"
     }
   ]
 }

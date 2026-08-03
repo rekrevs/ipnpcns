@@ -15,5 +15,6 @@ import IPNPCNS.Subspace.Examples
 import IPNPCNS.Learning.NNLS
 import IPNPCNS.Learning.NNLSOptimality
 import IPNPCNS.Learning.NNLSConvergence
+import IPNPCNS.Learning.NNLSSpectral
 import IPNPCNS.Model.Population
 import IPNPCNS.Model.ActiveFace

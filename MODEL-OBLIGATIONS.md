@@ -24,10 +24,10 @@ spectral contraction are represented in `IPNPCNS/Learning/NNLS.lean`,
 
 The following claims require separate theorem packages:
 
-- derivation of the implemented strict contraction from singular-value bounds and a
-  familiar step interval such as `0 < ε < 2 / ‖X‖²` in the full-row-rank case;
 - a rank-deficient convergence theorem to the minimizer set rather than to a unique
-  coefficient vector;
+  coefficient vector (scheduled as T-0016); strict coefficient contraction and
+  full-row-rank convergence for `0 < ε < 2 / L` are proved in
+  `IPNPCNS/Learning/NNLSSpectral.lean`;
 - stochastic projected-gradient convergence under a specified filtration, unbiased
   sampling law, moment bounds, and Robbins–Monro step-size conditions;
 - a steady-state tracking or misadjustment theorem for constant step size;

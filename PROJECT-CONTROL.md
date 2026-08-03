@@ -288,3 +288,36 @@
 - Revisit when:
   - T-0010 settles the full-row-rank and rank-deficient learning split.
   - T-0015 selects a concrete Moore--Penrose construction.
+
+## PCR-2026-08-03-009
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0010 derived the paper's full-row-rank step interval and proved the
+  obstruction to strict coefficient contraction in the rank-deficient case.
+- Control judgement: continue, operate, preserve
+- Current gate: The next dependency is the remaining exact cone/circuit algebra in
+  T-0011. Rank-deficient NNLS convergence needs a different proof architecture but no
+  owner decision.
+- Recommendation: Continue with T-0011. Preserve rank-deficient convergence as
+  T-0016, following the existing coverage queue, using Fejér monotonicity or averaged
+  operators rather than weakening T-0010's strict theorem.
+- Owner decision required: none; the distinction is mathematically forced by the
+  nontrivial kernel theorem.
+- Evidence:
+  - `IPNPCNS/Learning/NNLSSpectral.lean`
+  - `IPNPCNS/Learning/NNLSConvergence.lean`
+  - `wotan/dev-log/T-0010.md`
+- Uncertainty:
+  - A local finite-dimensional convergence argument may be needed because mathlib's
+    generic averaged-operator API is limited.
+  - The exact selected coefficient limit can depend on initialization, although its
+    prediction is unique.
+- Proposed actions:
+  - Execute T-0011 next.
+  - Execute T-0016 after the earlier paper-coverage and Moore--Penrose tasks unless a
+    dependency makes it urgent.
+- Revisit when:
+  - T-0011 closes the exact cone/circuit layer.
+  - T-0016 selects its convergence mechanism.
