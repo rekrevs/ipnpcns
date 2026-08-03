@@ -91,7 +91,35 @@ The following claims require separate theorem packages:
 - identification of the `λ < 1` update with the gradient of a matched filtered
   objective.
 
+Equation (42)'s fully general Hilbert-valued finite-coefficient objective is not
+packaged as a separate endpoint. The project verifies the finite matrix objective and
+its exact finite wavelet instances; it does not silently identify those endpoints with
+an arbitrary Hilbert-valued stochastic process.
+
 The phrase “under standard assumptions” is a research pointer, not a proposition.
+
+## Exact and approximate transmission invariance
+
+`IPNPCNS/Approx/Invariance.lean`, `Polarization.lean`, and `SparseGram.lean` verify
+equations (161)--(163), the scalar projection-error calculation (165)--(167), and the
+deterministic gain/coherence implication (170)--(171). The projection-error endpoint
+takes the transformed-space optimizer preimage `q`, its feasibility, transformed
+optimality, and coverage of the two relevant residuals as explicit premises. This is
+the exact calculation used by the paper, without inferring that an observed frame
+automatically covers every intermediate direction.
+
+The following surrounding source claims remain outside the compiled endpoint set:
+
+- the complete exact-equivariance benchmark in equations (158)--(160);
+- the closed-image/existence construction selecting `q` in equation (164), and the
+  subsequent unnumbered bound on the error after applying the transmission map;
+- the probabilistic Johnson--Lindenstrauss dimension guarantee in equation (168);
+- the disjoint-column identity (169), the equal-branch incidence specialization
+  (172), and the heterogeneous spatiotemporal path model (173).
+
+These omissions do not weaken the proved deterministic inequalities, but they must
+not be reported as if the entire transmission model or its probability law had been
+formalized.
 
 ## Face and support selection
 

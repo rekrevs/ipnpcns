@@ -5,7 +5,7 @@ import Mathlib.MeasureTheory.Function.L2Space
 /-!
 # The paper's orthonormal wavelet example
 
-This file formalizes the three finite-duration wavelets used in Section 5 of
+This file formalizes the three finite-duration wavelets used in Section 3.2 of
 the paper.  The recording window is exactly `T = 0.20 s`, the envelope is
 `sin²(πt/T)` on `[0,T]` and zero elsewhere, and the carrier frequencies are
 30, 30, and 60 Hz.  With the paper's normalization `4 / √(3T)`, the three

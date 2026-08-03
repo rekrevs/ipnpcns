@@ -189,7 +189,7 @@
     },
     {
       "id": "T-0022",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0025"
@@ -198,12 +198,11 @@
     },
     {
       "id": "T-0023",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0022"
       ],
-      "blocker": "The source audit and any corrective proof work must be complete first.",
       "summary": "Write the scientific formalization report"
     },
     {

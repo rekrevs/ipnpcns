@@ -870,3 +870,48 @@
   - T-0022 completes the full source-conformance audit.
   - Any archive finding changes a formula, assumption, equation mapping, or claimed
     coverage.
+
+## PCR-2026-08-03-023
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0022 completed the source-wide comparison against the authoritative
+  LaTeX archive and found no material mathematical discrepancy in the project's
+  claimed theorem set.
+- Control judgement: continue, operate, preserve
+- Current gate: Source fidelity is no longer the limiting uncertainty. The theorem
+  scope, explicit assumptions, constructive strengthenings, and non-formalized
+  boundaries now have a durable equation-by-equation record. The next risk is
+  scientific communication: presenting a large formal development accurately to a
+  mathematically mature reader who need not know Lean.
+- Recommendation: Complete T-0022 and release T-0023. Write the scientific report as
+  a self-contained mathematical account organized by concepts and results, not by
+  task chronology. Explain the trusted base and conditional boundaries plainly,
+  compile the LaTeX, and inspect every rendered page before proceeding to the process
+  history.
+- Owner decision required: none; PCD-2026-08-03-002 already approved this staged
+  transition after a clean source audit.
+- Evidence:
+  - `SOURCE-AUDIT.md`
+  - archive SHA-256
+    `a85f550647583374b73549e34cff596d0bd0c7991ea5586583f6cbdb068e1305`
+  - independent 60-page source build and body-text comparison with the distributed
+    PDF
+  - complete `lake build` of 2960 jobs
+  - clean proof-gap scan and a 38-endpoint axiom audit
+  - `MODEL-OBLIGATIONS.md`
+- Uncertainty:
+  - The report must remain readable without flattening the distinction between exact
+    theorems, the explicit mathematical interfaces, and empirical model validity.
+  - Typesetting dense formulas and traceability material may require several visual
+    QA iterations.
+- Proposed actions:
+  - Mark T-0022 done and unblock T-0023.
+  - Use `SOURCE-AUDIT.md`, the Lean modules, and `MODEL-OBLIGATIONS.md` as the factual
+    spine of the scientific report.
+  - Keep development history out of T-0023 except where a design choice is necessary
+    to explain mathematical meaning; reserve chronology and method for T-0024.
+- Revisit when:
+  - The scientific report compiles, passes text extraction and page-by-page visual
+    inspection, and accurately states the verified boundary.
