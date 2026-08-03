@@ -107,3 +107,37 @@
 - Revisit when:
   - T-0005 establishes the conditional population boundary.
   - T-0006 exposes a mismatch in either printed constant.
+
+## PCR-2026-08-03-004
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0005 established the conditional learning and population-model boundary.
+- Control judgement: continue, operate
+- Current gate: The remaining deterministic approximation endpoints should be closed
+  before expanding the conditional face and learning interfaces into constructive
+  theorems.
+- Recommendation: Execute T-0006 next. Then construct active-face projection regions
+  in T-0007 and prove finite NNLS optimality and deterministic convergence in T-0008.
+- Owner decision required: none; PCD-2026-08-03-001 already authorizes continuous
+  execution and creation of necessary follow-on work.
+- Evidence:
+  - `IPNPCNS/Learning/NNLS.lean`
+  - `IPNPCNS/Model/Population.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0005.md`
+- Uncertainty:
+  - The paper's stochastic statements remain underspecified and cannot be promoted to
+    theorems without adding a probability model.
+  - A useful constructive face theorem may initially need a finite generating family
+    and an explicitly selected active set rather than the paper's informal regions.
+- Proposed actions:
+  - Complete the sharp polarization and sparse Gram bounds in T-0006.
+  - Replace the conditional equation (199) field with sufficient polyhedral
+    hypotheses in T-0007.
+  - Extend fixed-point complementarity to minimizer equivalence and a precisely
+    scoped deterministic convergence theorem in T-0008.
+- Revisit when:
+  - T-0006 resolves or corrects the printed constants.
+  - T-0007 identifies the precise face-selection hypotheses.

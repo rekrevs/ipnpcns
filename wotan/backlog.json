@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 7,
+  "next_id": 9,
   "tasks": [
     {
       "id": "T-0001",
@@ -34,7 +34,7 @@
     },
     {
       "id": "T-0005",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0003"
@@ -49,6 +49,24 @@
         "T-0004"
       ],
       "summary": "Derive inner-product distortion and the sparse Gershgorin/RIP bound"
+    },
+    {
+      "id": "T-0007",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0006"
+      ],
+      "summary": "Construct polyhedral active-face projection regions"
+    },
+    {
+      "id": "T-0008",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0007"
+      ],
+      "summary": "Prove finite NNLS optimality and deterministic convergence"
     }
   ]
 }
