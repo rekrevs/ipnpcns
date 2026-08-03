@@ -198,7 +198,7 @@
     },
     {
       "id": "T-0023",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0022"
@@ -207,12 +207,11 @@
     },
     {
       "id": "T-0024",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0023"
       ],
-      "blocker": "The scientific report and source audit must establish the final verified scope first.",
       "summary": "Write the formalization process history"
     },
     {

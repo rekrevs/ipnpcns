@@ -1,0 +1,175 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{reports/ipnpcns-report}[2026/08/03 IPNPCNS report style]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{libertinus}
+\RequirePackage{microtype}
+\RequirePackage[a4paper,top=25mm,bottom=27mm,left=27mm,right=27mm,headheight=15pt]{geometry}
+\RequirePackage{mathtools}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{ragged2e}
+\RequirePackage{enumitem}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning,shapes.geometric}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{listings}
+\RequirePackage{caption}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{lastpage}
+\RequirePackage{url}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage[nameinlink,noabbrev]{cleveref}
+
+\definecolor{ReportNavy}{HTML}{173A59}
+\definecolor{ReportBlue}{HTML}{2D6A8A}
+\definecolor{ReportCyan}{HTML}{3B8EA5}
+\definecolor{ReportGold}{HTML}{C59132}
+\definecolor{ReportInk}{HTML}{24313A}
+\definecolor{ReportGray}{HTML}{5D6B74}
+\definecolor{ReportPale}{HTML}{EEF4F7}
+\definecolor{ReportWarm}{HTML}{FBF5E8}
+\definecolor{ReportGreen}{HTML}{2F6E58}
+\definecolor{ReportRed}{HTML}{9A4B45}
+
+\color{ReportInk}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=ReportNavy,
+  citecolor=ReportGreen,
+  urlcolor=ReportBlue,
+  pdfcreator={LaTeX},
+  pdfproducer={pdfTeX}
+}
+\urlstyle{same}
+
+\providecommand{\ReportShortTitle}{IPNPCNS verification}
+\providecommand{\ReportHeaderRight}{Technical report}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{ReportGray}\ReportShortTitle}
+\fancyhead[R]{\small\color{ReportGray}\ReportHeaderRight}
+\fancyfoot[C]{\small\color{ReportGray}\thepage\ of \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.35pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\titleformat{\section}
+  {\Large\bfseries\color{ReportNavy}}
+  {\thesection}{0.65em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{ReportBlue}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{ReportInk}}
+  {\thesubsubsection}{0.55em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus 0.8ex minus 0.2ex}{0.9ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus 0.6ex minus 0.2ex}{0.6ex}
+\titlespacing*{\subsubsection}{0pt}{1.4ex plus 0.4ex minus 0.2ex}{0.4ex}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.58em plus 0.12em minus 0.08em}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,leftmargin=1.55em,topsep=0.35em,itemsep=0.25em}
+\setlist[description]{style=nextline,font=\bfseries\color{ReportNavy}}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{5.5pt}
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+
+\captionsetup{
+  font=small,
+  labelfont={bf,color=ReportNavy},
+  textfont={color=ReportInk},
+  margin=1.2em
+}
+
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\newtcolorbox{keyresult}[1][]{
+  enhanced,
+  breakable,
+  colback=ReportPale,
+  colframe=ReportBlue,
+  boxrule=0.65pt,
+  arc=1.2mm,
+  left=2.4mm,right=2.4mm,top=1.8mm,bottom=1.8mm,
+  title={#1},
+  fonttitle=\bfseries,
+  coltitle=ReportNavy
+}
+
+\newtcolorbox{boundarybox}[1][]{
+  enhanced,
+  breakable,
+  colback=ReportWarm,
+  colframe=ReportGold,
+  boxrule=0.65pt,
+  arc=1.2mm,
+  left=2.4mm,right=2.4mm,top=1.8mm,bottom=1.8mm,
+  title={#1},
+  fonttitle=\bfseries,
+  coltitle=ReportInk
+}
+
+\newcommand{\statusverified}{\textcolor{ReportGreen}{\textbf{Verified}}}
+\newcommand{\statusconditional}{\textcolor{ReportGold}{\textbf{Conditional}}}
+\newcommand{\statusrepresented}{\textcolor{ReportBlue}{\textbf{Represented}}}
+\newcommand{\statusoutside}{\textcolor{ReportRed}{\textbf{Outside scope}}}
+
+\lstdefinestyle{leanstyle}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{ReportNavy},
+  commentstyle=\itshape\color{ReportGray},
+  stringstyle=\color{ReportGreen},
+  frame=single,
+  rulecolor=\color{ReportCyan},
+  backgroundcolor=\color{ReportPale},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Conic}{\operatorname{Conic}}
+\newcommand{\Col}{\operatorname{Col}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\relint}{\operatorname{relint}}
+\newcommand{\cproj}{\mathbin{\llcorner}}
+\newcommand{\crej}{\mathbin{\backslash_{\!\perp}}}
+\newcommand{\polar}[1]{#1^{\circleddash}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\tr}{tr}
+
+\newcommand{\reportdivider}{%
+  \par\vspace{0.4em}%
+  {\color{ReportCyan}\rule{\linewidth}{0.6pt}}%
+  \par\vspace{0.4em}%
+}
+
+\AtBeginDocument{\raggedbottom}

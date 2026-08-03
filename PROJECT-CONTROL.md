@@ -915,3 +915,45 @@
 - Revisit when:
   - The scientific report compiles, passes text extraction and page-by-page visual
     inspection, and accurately states the verified boundary.
+
+## PCR-2026-08-03-024
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0023 completed the non-chronological scientific report and its compiled
+  PDF passed source, metadata, extraction, structural, and page-by-page visual QA.
+- Control judgement: continue, operate, preserve
+- Current gate: The mathematical result and verification boundary now have a stable
+  reader-facing account. The remaining closure obligation is deliberately different:
+  reconstructing how theorem contracts, proof architecture, scope corrections, and
+  audit standards emerged without collapsing the evidence into a task diary.
+- Recommendation: Complete T-0023 and release T-0024. Build the process history from
+  dated Wotan logs, project-control records, Git commits, code changes, build records,
+  and the source audit. Organize the report around causal development arcs and
+  methodological lessons, using chronology only where it explains a decision or
+  correction.
+- Owner decision required: none; PCD-2026-08-03-002 approved the two-report closure
+  sequence and explicitly distinguished their purposes.
+- Evidence:
+  - `reports/scientific-formalization-report.tex`
+  - `output/pdf/ipnpcns-scientific-formalization-report.pdf`
+  - final PDF SHA-256
+    `5050dae901198332c9096be079a5b22739e5a6e1386bfc89e603fea04b2e1976`
+  - clean final LaTeX warning scan and Ghostscript decode
+  - successful extracted-text review and 24-page visual inspection
+  - `SOURCE-AUDIT.md` and `MODEL-OBLIGATIONS.md`
+- Uncertainty:
+  - Contemporaneous logs differ in detail, so causal claims must be corroborated by
+    code or commit evidence and later interpretation must be labeled as such.
+  - A useful history must include false starts and residual uncertainty while
+    avoiding both triumphalism and an exhaustive commit-by-commit transcript.
+- Proposed actions:
+  - Mark T-0023 done and T-0024 ready.
+  - Construct an evidence matrix before drafting prose.
+  - Use a small number of explanatory arcs: specification, geometric core,
+    approximation boundaries, analytic and optimization layers, probabilistic
+    exactification, and source/trust closure.
+- Revisit when:
+  - The process-history PDF has passed the same compilation, extraction, structural,
+    and page-by-page visual QA standard.
