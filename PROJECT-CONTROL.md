@@ -79,3 +79,31 @@
 - Revisit when:
   - The intersection identity compiles.
   - The approximation theorem requires a material correction or new owner-owned scope.
+
+## PCR-2026-08-03-003
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0004 proved the intersection identity and deterministic projection-error
+  theorem.
+- Control judgement: continue, operate
+- Current gate: The conditional population model is now the highest-value unverified
+  paper layer; polarization and Gershgorin are independent reusable endpoints.
+- Recommendation: Continue with T-0005, preserving every learning and biological
+  premise as an explicit hypothesis. Execute T-0006 afterward to close the remaining
+  deterministic approximation endpoints.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes continuation and
+  decomposition.
+- Evidence:
+  - `IPNPCNS/Cone/Intersection.lean`
+  - `IPNPCNS/Approx/Invariance.lean`
+  - `wotan/dev-log/T-0004.md`
+- Uncertainty:
+  - The full NNLS convergence discussion cannot be recovered from “standard
+    assumptions”; only precisely stated finite or conditional results are admissible.
+  - The sharp (162) constant and support bookkeeping for (171) may require more
+    infrastructure than their paper-level derivations suggest.
+- Revisit when:
+  - T-0005 establishes the conditional population boundary.
+  - T-0006 exposes a mismatch in either printed constant.

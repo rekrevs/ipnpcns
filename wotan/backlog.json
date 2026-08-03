@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 6,
+  "next_id": 7,
   "tasks": [
     {
       "id": "T-0001",
@@ -25,7 +25,7 @@
     },
     {
       "id": "T-0004",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0003"
@@ -40,6 +40,15 @@
         "T-0003"
       ],
       "summary": "Extend the formalization to NNLS and the conditional population model"
+    },
+    {
+      "id": "T-0006",
+      "status": "READY",
+      "size": "L",
+      "after": [
+        "T-0004"
+      ],
+      "summary": "Derive inner-product distortion and the sparse Gershgorin/RIP bound"
     }
   ]
 }
