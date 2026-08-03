@@ -26,3 +26,4 @@ import IPNPCNS.Model.ActiveFace
 import IPNPCNS.Model.Circuits
 import IPNPCNS.Probability.Occupancy
 import IPNPCNS.Signal.Deterministic
+import IPNPCNS.Signal.Volterra

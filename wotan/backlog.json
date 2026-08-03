@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 19,
+  "next_id": 20,
   "tasks": [
     {
       "id": "T-0001",
@@ -153,12 +153,21 @@
     },
     {
       "id": "T-0018",
-      "status": "PENDING",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0017"
       ],
       "summary": "Construct a compact finite-window convolution filter"
+    },
+    {
+      "id": "T-0019",
+      "status": "TODO",
+      "size": "M",
+      "after": [
+        "T-0018"
+      ],
+      "summary": "Prove cone-projection span reduction and homogeneity"
     }
   ]
 }

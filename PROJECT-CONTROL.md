@@ -584,3 +584,51 @@
   - A nonzero causal convolution operator and its compactness proof compile.
   - The finite-rank approximation route exposes a missing theorem that changes the
     appropriate scope.
+
+## PCR-2026-08-03-017
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: direction-review
+- Trigger: T-0018 constructed the causal unit-step Volterra filter, proved its
+  almost-everywhere convolution formula, norm bound, finite-rank approximation
+  property, and compactness, leaving the approved Wotan queue empty.
+- Control judgement: continue, operate, preserve
+- Current gate: The central cone and deterministic signal claims now have concrete
+  witnesses. The next exact paper-facing gap is the projection structure used before
+  equation (199): reduction to `span(q)` in (195) and positive homogeneity in (196).
+  The current active-face certificate proves a sufficient local formula but does not
+  yet expose these two global projection laws.
+- Recommendation: Create and execute T-0019. Prove positive homogeneity of metric
+  projection onto every closed cone for nonnegative scalars. Prove that projection
+  onto a cone with finite-dimensional span depends only on the orthogonal projection
+  of the input onto that span, then specialize this to finitely generated cones. Reuse
+  the existing variational characterization and keep intrinsic relative-interior face
+  necessity outside this task.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes necessary follow-on
+  work and this task closes exact deterministic equations without expanding into an
+  empirical support-selection model.
+- Evidence:
+  - `IPNPCNS/Signal/Volterra.lean`
+  - `IPNPCNS/Model/ActiveFace.lean`
+  - `IPNPCNS/Cone/MetricProjection.lean`
+  - `IPNPCNS/Cone/Comparison.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0018.md`
+- Uncertainty:
+  - The span-reduction theorem needs an orthogonal projection onto `span(q)`; the
+    paper's finitely generated hypothesis should provide finite dimensionality, but
+    the bridge from closed conic hull to real linear span must be explicit.
+  - A full relative-interior partition and necessity theorem would require a larger
+    polyhedral-face API and is not needed to prove (195)--(196).
+- Proposed actions:
+  - Add T-0019 after T-0018 and prove the general homogeneity theorem first.
+  - State span reduction under an explicit finite-dimensional-span premise and derive
+    the finite-generator corollary without assuming that the ambient Hilbert space is
+    finite-dimensional.
+  - Update the population-model obligations and revisit the remaining deterministic
+    queue after the two equations compile.
+- Revisit when:
+  - Equations (195) and (196) compile with assumption and axiom audits.
+  - The finite-generator span bridge reveals a stronger closure premise than the
+    paper supplies.

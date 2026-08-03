@@ -27,12 +27,21 @@ temporal filters as bounded linear operators. Equation (31), operator-norm bound
 nonnegative conic aggregation, cone preservation, finite-dictionary spans, and the
 first-order stability part of equation (33) are verified from explicit hypotheses.
 
-The following analytic claims remain deliberately conditional:
+`IPNPCNS/Signal/Volterra.lean` discharges these analytic obligations for one explicit
+nontrivial model: the causal unit-step impulse response with causal truncation.  It
+constructs the prefix-integration operator on scalar `L²`, proves the almost-everywhere
+integral identity and the bound `‖V‖ ≤ T` for `0 ≤ T`, obtains operator-norm
+finite-rank approximants from simple `L²` kernels, and proves compactness.  It also
+inhabits `ConvolutionHypotheses`, `HasFiniteRankApproximations`, and
+`CompactFilterPremise` with those proofs.  Periodic and whole-line zero-extension
+operators are explicitly not identified with this causal construction.
 
-- identifying a bounded operator with a concrete truncated convolution requires a
-  selected boundary convention and an almost-everywhere integral identity;
-- square-integrability of a particular impulse response and compactness of the
-  resulting operator require concrete kernel regularity and domain proofs;
+The following broader analytic claims remain deliberately conditional:
+
+- identifying an arbitrary bounded operator with another truncated convolution still
+  requires a selected boundary convention and an almost-everywhere integral identity;
+- square-integrability and compactness for impulse responses beyond the verified
+  unit-step example still require concrete kernel regularity and domain proofs;
 - compactness does not by itself become a finite-rank approximation theorem in this
   development; the required operator-norm approximation property is named
   `HasFiniteRankApproximations`;
