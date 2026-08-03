@@ -426,3 +426,40 @@
 - Revisit when:
   - T-0014 establishes the signal/filter boundary and determines any justified
     follow-on tasks.
+
+## PCR-2026-08-03-013
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0014 established the finite-window Bochner `L²` signal layer, bounded
+  spatial and temporal operators, conic aggregation, finite dictionaries, and an
+  explicit discretization remainder boundary.
+- Control judgement: continue, operate, preserve
+- Current gate: T-0015 remains the next general mathematical gap: the paper's
+  Moore--Penrose projector spellings are not yet connected to the intrinsic subspace
+  theorems. The exact wavelet and concrete convolution claims are now separable and
+  no longer block the deterministic abstraction.
+- Recommendation: Execute T-0015 next, preserving the no-full-rank requirement and
+  using finite-dimensional orthogonal decomposition if a complete SVD API would add
+  unnecessary scope. Keep T-0016 next in the optimization queue. Schedule the exact
+  Hann dictionary as T-0017 and a concrete compact convolution construction as
+  T-0018 after those algebraic obligations.
+- Owner decision required: none; the ordering reduces shared-foundation risk and is
+  authorized by PCD-2026-08-03-001.
+- Evidence:
+  - `IPNPCNS/Signal/Deterministic.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0014.md`
+  - Sections 3.1--3.3 in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Mathlib still has no bundled general Moore--Penrose matrix inverse.
+  - Exact trigonometric integration and compact convolution may each require reusable
+    analysis infrastructure; they should not be mixed into the matrix task.
+- Proposed actions:
+  - Execute T-0015 and prove all four Penrose equations before projector corollaries.
+  - Execute T-0016 using a Fejér or averaged-operator argument without a positive
+    lower singular-value premise.
+  - Retain T-0017 and T-0018 as explicit later analytic coverage.
+- Revisit when:
+  - T-0015 selects and verifies a maintainable pseudoinverse construction.

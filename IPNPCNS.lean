@@ -22,3 +22,4 @@ import IPNPCNS.Model.Population
 import IPNPCNS.Model.ActiveFace
 import IPNPCNS.Model.Circuits
 import IPNPCNS.Probability.Occupancy
+import IPNPCNS.Signal.Deterministic

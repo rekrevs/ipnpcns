@@ -14,6 +14,32 @@ the canonical projector is therefore scheduled as T-0015 rather than assumed. Th
 does not affect the verified subspaces or their orthogonal projectors; it only leaves
 one finite matrix representation theorem package open.
 
+## Deterministic signals and filters
+
+`IPNPCNS/Signal/Deterministic.lean` fixes the signal domain used in Sections 3.1--3.3
+as Bochner `L²` over Lebesgue measure restricted to `[0, T]`. It provides scalar and
+finite-vector signal types, lifts finite spatial matrices pointwise, and represents
+temporal filters as bounded linear operators. Equation (31), operator-norm bounds,
+nonnegative conic aggregation, cone preservation, finite-dictionary spans, and the
+first-order stability part of equation (33) are verified from explicit hypotheses.
+
+The following analytic claims remain deliberately conditional:
+
+- identifying a bounded operator with a concrete truncated convolution requires a
+  selected boundary convention and an almost-everywhere integral identity;
+- square-integrability of a particular impulse response and compactness of the
+  resulting operator require concrete kernel regularity and domain proofs;
+- compactness does not by itself become a finite-rank approximation theorem in this
+  development; the required operator-norm approximation property is named
+  `HasFiniteRankApproximations`;
+- equation (32) requires a concrete transform and gain satisfying the named
+  `TransferIdentity` premise;
+- the `O(Δt²)` in equation (33) is an explicit `QuadraticRemainder`, not a conclusion
+  about the biological dynamics without differentiability and time-scale premises.
+
+The finite wavelet dictionary and its claimed orthonormality can be verified as a
+separate exact example; they are not needed for the abstract deterministic layer.
+
 ## NNLS and learning
 
 The finite batch objective, gradient, nonnegative projected update, fixed-point
