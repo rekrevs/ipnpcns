@@ -3,6 +3,17 @@
 This file records paper claims that require additional mathematical or empirical input.
 They are not admitted as hidden axioms in the Lean development.
 
+## Finite subspaces and matrix representations
+
+`IPNPCNS/Subspace/Basic.lean`, `FiniteMatrix.lean`, `Comparison.lean`, and
+`Examples.lean` verify the intrinsic operations in equations (12)--(23), the range
+identity `Col(A Aᵀ) = Col(A)`, and the trace/Frobenius comparisons (24), (27)--(29).
+
+Mathlib 4.31 has no general Moore--Penrose matrix API. The exact `A A⁺` spelling of
+the canonical projector is therefore scheduled as T-0015 rather than assumed. This
+does not affect the verified subspaces or their orthogonal projectors; it only leaves
+one finite matrix representation theorem package open.
+
 ## NNLS and learning
 
 The finite batch objective, gradient, nonnegative projected update, fixed-point

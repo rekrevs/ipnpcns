@@ -8,6 +8,10 @@ import IPNPCNS.Cone.Intersection
 import IPNPCNS.Cone.Examples
 import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
+import IPNPCNS.Subspace.Basic
+import IPNPCNS.Subspace.FiniteMatrix
+import IPNPCNS.Subspace.Comparison
+import IPNPCNS.Subspace.Examples
 import IPNPCNS.Learning.NNLS
 import IPNPCNS.Learning.NNLSOptimality
 import IPNPCNS.Learning.NNLSConvergence

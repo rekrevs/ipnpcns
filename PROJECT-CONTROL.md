@@ -253,3 +253,38 @@
   - T-0009 determines the Moore–Penrose scope.
   - T-0011 closes the remaining exact cone-algebra surface.
   - T-0014 reaches an analytic or empirical specification boundary.
+
+## PCR-2026-08-03-008
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0009 completed the intrinsic finite subspace algebra, matrix-range
+  identity, and projector comparison layer, and exposed the exact Moore--Penrose
+  representation boundary.
+- Control judgement: continue, operate, preserve
+- Current gate: T-0010 can now use finite adjoint/range infrastructure to derive the
+  NNLS spectral contraction. Moore--Penrose notation is not on that dependency path.
+- Recommendation: Continue with T-0010. Preserve exact pseudoinverse projector
+  spellings as T-0015, ordered after the higher-value deterministic coverage queue but
+  already actionable from T-0009.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes both continuation and
+  creation of necessary follow-on tasks.
+- Evidence:
+  - `IPNPCNS/Subspace/Basic.lean`
+  - `IPNPCNS/Subspace/FiniteMatrix.lean`
+  - `IPNPCNS/Subspace/Comparison.lean`
+  - `IPNPCNS/Subspace/Examples.lean`
+  - `wotan/dev-log/T-0009.md`
+- Uncertainty:
+  - A maintainable Moore--Penrose implementation may require a reusable spectral or
+    singular-value layer rather than a short matrix definition.
+  - The paper gains no additional geometric theorem from the `A A⁺` spelling, so it
+    should not delay contraction, cone, probability, or signal coverage.
+- Proposed actions:
+  - Execute T-0010 next.
+  - Retain T-0015 as READY and execute it after earlier queue entries unless another
+    task establishes a direct dependency.
+- Revisit when:
+  - T-0010 settles the full-row-rank and rank-deficient learning split.
+  - T-0015 selects a concrete Moore--Penrose construction.
