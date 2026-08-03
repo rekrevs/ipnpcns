@@ -16,7 +16,7 @@
     },
     {
       "id": "T-0003",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0002"
@@ -25,22 +25,20 @@
     },
     {
       "id": "T-0004",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0003"
       ],
-      "blocker": "Requires the cone projection and Moreau infrastructure from T-0003.",
       "summary": "Formalize the cone intersection identity and deterministic invariance bounds"
     },
     {
       "id": "T-0005",
-      "status": "BLOCKED",
+      "status": "READY",
       "size": "L",
       "after": [
         "T-0003"
       ],
-      "blocker": "Requires the stable core cone API from T-0003.",
       "summary": "Extend the formalization to NNLS and the conditional population model"
     }
   ]

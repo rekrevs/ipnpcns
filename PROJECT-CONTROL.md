@@ -51,3 +51,31 @@
   - T-0003 completes or exposes a foundational mismatch.
   - A scientific or technical gate cannot be resolved from project evidence.
   - All approved work is complete.
+
+## PCR-2026-08-03-002
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0003 completed the first scientific and architectural gate.
+- Control judgement: continue, operate
+- Current gate: The longer intersection identity (109) is the next unverified
+  structural claim; deterministic approximation results should not obscure that gate.
+- Recommendation: Continue with T-0004, proving the intersection identity first and
+  decomposing approximate invariance or Gershgorin work if either requires independent
+  infrastructure.
+- Owner decision required: none; PCD-2026-08-03-001 already authorizes continuous
+  execution and in-scope decomposition.
+- Evidence:
+  - `IPNPCNS/Cone/MetricProjection.lean`
+  - `IPNPCNS/Cone/Moreau.lean`
+  - `IPNPCNS/Cone/DoubleRejection.lean`
+  - `wotan/dev-log/T-0003.md`
+- Uncertainty:
+  - The paper's intersection proof is substantially longer than double rejection and
+    may benefit from a shorter equivalent proof using polar identities.
+  - The exact hypotheses needed for the printed projection-error constant remain to
+    be compiler- and algebra-checked.
+- Revisit when:
+  - The intersection identity compiles.
+  - The approximation theorem requires a material correction or new owner-owned scope.
