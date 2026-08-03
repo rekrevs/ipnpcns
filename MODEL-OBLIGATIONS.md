@@ -154,8 +154,10 @@ the `m` selections are averaged over their Cartesian product. The expected occup
 count is proved to be `n * (1 - (1 - p / n)^m)` for `0 < n` and `p ≤ n`; zero and
 invalid parameter cases are separate theorems.
 
-The exponential replacement has a named `ExponentialOccupancyErrorBound` premise;
-no asymptotic error is silently assumed. The `q² / n` two-message overlap follows
+The exponential replacement is now quantitatively certified rather than merely
+postulated. For `0 < n` and `p ≤ n`, it underestimates the exact finite expectation,
+and the absolute gap is at most `m p² / n`. This is a finite, uniform inequality, not
+an untracked asymptotic convention. The `q² / n` two-message overlap still follows
 only from separately supplied uniform-marginal and targetwise-independence premises.
 Those premises remain modeling approximations, not consequences about biological
 messages.

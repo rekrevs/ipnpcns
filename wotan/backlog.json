@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 22,
+  "next_id": 26,
   "tasks": [
     {
       "id": "T-0001",
@@ -180,12 +180,51 @@
     },
     {
       "id": "T-0021",
-      "status": "READY",
+      "status": "DONE",
       "size": "M",
       "after": [
         "T-0020"
       ],
       "summary": "Bound the exponential occupancy approximation"
+    },
+    {
+      "id": "T-0022",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0025"
+      ],
+      "blocker": "The proof formalization phase has not yet reached its project-control closure checkpoint; keep this dependency attached to the final proof task.",
+      "summary": "Audit the formalization against the LaTeX source archive"
+    },
+    {
+      "id": "T-0023",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0022"
+      ],
+      "blocker": "The source audit and any corrective proof work must be complete first.",
+      "summary": "Write the scientific formalization report"
+    },
+    {
+      "id": "T-0024",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0023"
+      ],
+      "blocker": "The scientific report and source audit must establish the final verified scope first.",
+      "summary": "Write the formalization process history"
+    },
+    {
+      "id": "T-0025",
+      "status": "READY",
+      "size": "M",
+      "after": [
+        "T-0021"
+      ],
+      "summary": "Construct the independent two-message occupancy experiment"
     }
   ]
 }

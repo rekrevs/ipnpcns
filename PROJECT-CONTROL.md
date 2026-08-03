@@ -722,3 +722,109 @@
 - Revisit when:
   - The signed and absolute occupancy-error bounds compile.
   - The power estimate exposes a parameter restriction stronger than `p ≤ n`.
+
+## PCR-2026-08-03-020
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: direction-review
+- Trigger: The owner added a publication-quality closure requirement: validate the
+  completed formalization against the paper's LaTeX source archive, correct every
+  material discrepancy, and then produce two intentionally distinct English reports.
+- Control judgement: continue, evaluate, preserve
+- Current gate: The proof phase is still active. A source-wide conformance audit would
+  otherwise assess a moving target, while both reports must describe the final audited
+  theorem scope rather than the current intermediate state.
+- Recommendation: Install a moving proof-phase barrier followed by three staged Wotan
+  tasks. First audit every claimed paper statement against the LaTeX archive and reopen
+  affected proofs on any material finding. Then write a self-contained scientific
+  report about the mathematics and certification, followed by a separate evidence-based
+  history of how the formalization was developed. Compile and visually inspect both
+  reports as PDFs.
+- Owner decision required: Approve, modify, or reject the staged source-audit and
+  two-report closure plan.
+- Evidence:
+  - Owner instruction of 2026-08-03
+  - `arXiv-2309.02332v3.tar.gz`
+  - `PROJECT-CONTROL.md`
+  - `wotan/backlog.json`
+  - `wotan/dev-log/`
+  - Git history on `codex/lean-formalization`
+- Uncertainty:
+  - The final number of proof tasks is not yet known, so T-0022's predecessor must
+    continue to track the latest proof task until a closure checkpoint selects audit.
+  - Source audit findings may reopen any earlier theorem or documentation section.
+- Proposed actions:
+  - Add blocked T-0022 for a source-complete LaTeX-to-Lean conformance audit and all
+    necessary corrective work.
+  - Add blocked T-0023 for a non-chronological scientific formalization report aimed at
+    mathematically literate non-Lean specialists.
+  - Add blocked T-0024 for a separate, evidence-led history of the formalization and
+    proof-development process.
+- Revisit when:
+  - The proof phase reaches a checkpoint at which no additional theorem task is more
+    valuable than source-wide conformance audit.
+  - T-0022 discovers a discrepancy that changes the claimed mathematical scope.
+
+## PCD-2026-08-03-002
+
+- Record type: decision
+- Date: 2026-08-03
+- Decides review: `PCR-2026-08-03-020`
+- Owner: Sverker Janson
+- Decision: Approve the staged closure plan. Continue proving autonomously; after the
+  proof phase, inspect the LaTeX archive and redo all affected work if necessary. Then
+  produce an English scientific report centered on the mathematics and a distinct
+  English process-history report centered on how the formalization was developed,
+  compiling and quality-assuring both as PDFs.
+- Disposition: approved
+- Resulting Wotan tasks: `T-0022`, `T-0023`, `T-0024`
+- Portfolio signal: The project remains under active autonomous execution and now has
+  explicit source-conformance and publication deliverables after proof closure.
+- Related records:
+  - `wotan/dev-log/T-0022.md`
+  - `wotan/dev-log/T-0023.md`
+  - `wotan/dev-log/T-0024.md`
+- Revisit when:
+  - The proof queue reaches closure and T-0022 can replace the moving proof barrier.
+  - Source discrepancies require a material revision of theorem scope.
+
+## PCR-2026-08-03-021
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0021 proved that equation (30)'s exponential approximation
+  underestimates the exact finite occupancy expectation with absolute error at most
+  `m p²/n`; the only actionable tasks are now the blocked source and report stages.
+- Control judgement: continue, operate, preserve
+- Current gate: The subsequent `q²/n` two-message overlap remains conditional on an
+  abstract independence premise. The concrete finite occupancy model can realize that
+  premise exactly by taking a Cartesian product of two independently sampled messages.
+- Recommendation: Insert and execute T-0025 before the source-audit barrier. Define
+  the exact two-message product experiment, express intersection cardinality by
+  target-hit indicators, and prove expected overlap
+  `(exactOccupancyFormula n m p)²/n`. Preserve independence as a sampling-model
+  assumption rather than a biological conclusion.
+- Owner decision required: none; this is a concrete instantiation of an existing
+  paper-scoped approximation boundary and does not add a biological assumption.
+- Evidence:
+  - `IPNPCNS/Probability/Occupancy.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0013.md`
+  - `wotan/dev-log/T-0021.md`
+  - Equation (30) and its following paragraph in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - The finite expectation API may require an explicit product-to-iterated-expectation
+    bridge, but mathlib provides both product and multiplication lemmas.
+  - Exact `q²/n` is valid for the chosen independent product law only; it must not be
+    reported as a theorem about correlated biological messages.
+- Proposed actions:
+  - Add T-0025 after T-0021 and move T-0022's proof barrier to T-0025.
+  - Prove the concrete expected-intersection theorem and connect it to the existing
+    conditional target model where useful.
+  - Reassess whether another compact theorem target remains before releasing T-0022.
+- Revisit when:
+  - The concrete two-message overlap theorem compiles.
+  - The product model reveals a mismatch between `q` as an expectation and targetwise
+    uniform marginals.

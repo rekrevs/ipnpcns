@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Expect
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Nat.Choose.Cast
 import Mathlib.Data.Real.Basic
@@ -11,8 +12,8 @@ import Mathlib.Tactic.FieldSimp
 This module formalizes the exact part of equation (30).  One active axon selects a
 uniform `p`-element subset of `n` targets; an `m`-axon sample is an element of the
 finite Cartesian power of that choice set, so independence across axons is built into
-the uniform product average.  Exponential and two-message approximations are kept in
-separate, explicitly conditional interfaces.
+the uniform product average.  The exponential replacement receives a quantitative
+error theorem; the two-message approximation remains a separate conditional interface.
 -/
 
 open scoped BigOperators
@@ -278,6 +279,135 @@ theorem expectedOccupied_exponential_error {n m p : ℕ}
     |expectedOccupied n m p - exponentialOccupancyApproximation n m p| ≤ δ := by
   rw [expectedOccupied_eq_exactFormula hn hp]
   exact hApprox
+
+/-- On the unit interval, raising two nonnegative bases to a natural power
+amplifies their difference by at most the exponent. -/
+private theorem pow_sub_pow_le_nat_mul_sub
+    {a b : ℝ} (ha : 0 ≤ a) (hab : a ≤ b) (hb : b ≤ 1) (m : ℕ) :
+    b ^ m - a ^ m ≤ (m : ℝ) * (b - a) := by
+  have hb0 : 0 ≤ b := ha.trans hab
+  have hpow := abs_pow_sub_pow_le b a m
+  rw [abs_of_nonneg (sub_nonneg.mpr (pow_le_pow_left₀ ha hab m)),
+    abs_of_nonneg (sub_nonneg.mpr hab), abs_of_nonneg hb0,
+    abs_of_nonneg ha, max_eq_left hab] at hpow
+  calc
+    b ^ m - a ^ m ≤ (b - a) * (m : ℝ) * b ^ (m - 1) := hpow
+    _ ≤ (b - a) * (m : ℝ) * 1 := by
+      gcongr
+      exact pow_le_one₀ hb0 hb
+    _ = (m : ℝ) * (b - a) := by ring
+
+/-- The signed comparison behind equation (30)'s exponential approximation.
+The exact expression exceeds the exponential replacement, and their gap is at
+most `m p² / n`. -/
+private theorem occupancyApproximation_signed_bounds
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    0 ≤ exactOccupancyFormula n m p - exponentialOccupancyApproximation n m p ∧
+      exactOccupancyFormula n m p - exponentialOccupancyApproximation n m p ≤
+        (m : ℝ) * (p : ℝ) ^ 2 / (n : ℝ) := by
+  let x : ℝ := (p : ℝ) / (n : ℝ)
+  let a : ℝ := 1 - x
+  let b : ℝ := Real.exp (-x)
+  have hnR : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hpR : (p : ℝ) ≤ (n : ℝ) := by exact_mod_cast hp
+  have hx0 : 0 ≤ x := by
+    dsimp [x]
+    positivity
+  have hx1 : x ≤ 1 := by
+    dsimp [x]
+    exact (div_le_one hnR).mpr hpR
+  have ha0 : 0 ≤ a := by
+    dsimp [a]
+    linarith
+  have hab : a ≤ b := by
+    dsimp [a, b]
+    exact Real.one_sub_le_exp_neg x
+  have hb0 : 0 ≤ b := by
+    dsimp [b]
+    exact (Real.exp_pos _).le
+  have hb1 : b ≤ 1 := by
+    dsimp [b]
+    exact Real.exp_le_one_iff.mpr (neg_nonpos.mpr hx0)
+  have habs : |-x| ≤ 1 := by
+    rw [abs_neg, abs_of_nonneg hx0]
+    exact hx1
+  have hlocalAbs : |b - a| ≤ x ^ 2 := by
+    have h := Real.abs_exp_sub_one_sub_id_le habs
+    dsimp [a, b]
+    convert h using 1 <;> ring_nf
+  have hlocal : b - a ≤ x ^ 2 := by
+    rw [abs_of_nonneg (sub_nonneg.mpr hab)] at hlocalAbs
+    exact hlocalAbs
+  have hpowMono : a ^ m ≤ b ^ m := pow_le_pow_left₀ ha0 hab m
+  have hpowError : b ^ m - a ^ m ≤ (m : ℝ) * x ^ 2 := by
+    calc
+      b ^ m - a ^ m ≤ (m : ℝ) * (b - a) :=
+        pow_sub_pow_le_nat_mul_sub ha0 hab hb1 m
+      _ ≤ (m : ℝ) * x ^ 2 := by gcongr
+  have hexpPower :
+      Real.exp (-((m : ℝ) * (p : ℝ) / (n : ℝ))) = b ^ m := by
+    rw [show -((m : ℝ) * (p : ℝ) / (n : ℝ)) = (m : ℝ) * (-x) by
+      dsimp [x]
+      ring]
+    exact Real.exp_nat_mul (-x) m
+  have hformula :
+      exactOccupancyFormula n m p - exponentialOccupancyApproximation n m p =
+        (n : ℝ) * (b ^ m - a ^ m) := by
+    unfold exactOccupancyFormula exponentialOccupancyApproximation
+    rw [hexpPower]
+    dsimp [a, x]
+    ring
+  constructor
+  · rw [hformula]
+    exact mul_nonneg hnR.le (sub_nonneg.mpr hpowMono)
+  · rw [hformula]
+    calc
+      (n : ℝ) * (b ^ m - a ^ m) ≤ (n : ℝ) * ((m : ℝ) * x ^ 2) :=
+        mul_le_mul_of_nonneg_left hpowError hnR.le
+      _ = (m : ℝ) * (p : ℝ) ^ 2 / (n : ℝ) := by
+        dsimp [x]
+        field_simp
+
+/-- Equation (30)'s exponential expression underestimates the exact finite
+occupancy expression for valid parameters. -/
+theorem exponentialOccupancyApproximation_le_exactOccupancyFormula
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    exponentialOccupancyApproximation n m p ≤ exactOccupancyFormula n m p := by
+  exact sub_nonneg.mp (occupancyApproximation_signed_bounds hn hp).1
+
+/-- Explicit signed error bound for equation (30)'s exponential replacement. -/
+theorem exactOccupancyFormula_sub_exponentialOccupancyApproximation_le
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    exactOccupancyFormula n m p - exponentialOccupancyApproximation n m p ≤
+      (m : ℝ) * (p : ℝ) ^ 2 / (n : ℝ) :=
+  (occupancyApproximation_signed_bounds hn hp).2
+
+/-- A constructive witness for the named exponential-approximation error
+interface. -/
+theorem exponentialOccupancyErrorBound_sq
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    ExponentialOccupancyErrorBound n m p
+      ((m : ℝ) * (p : ℝ) ^ 2 / (n : ℝ)) := by
+  unfold ExponentialOccupancyErrorBound
+  rw [abs_of_nonneg (occupancyApproximation_signed_bounds hn hp).1]
+  exact exactOccupancyFormula_sub_exponentialOccupancyApproximation_le hn hp
+
+/-- Equation (30)'s exponential expression also underestimates the exact expected
+occupancy of the finite experiment. -/
+theorem exponentialOccupancyApproximation_le_expectedOccupied
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    exponentialOccupancyApproximation n m p ≤ expectedOccupied n m p := by
+  rw [expectedOccupied_eq_exactFormula hn hp]
+  exact exponentialOccupancyApproximation_le_exactOccupancyFormula hn hp
+
+/-- The exact finite expectation is within `m p² / n` of equation (30)'s
+exponential approximation. -/
+theorem expectedOccupied_exponential_sq_error
+    {n m p : ℕ} (hn : 0 < n) (hp : p ≤ n) :
+    |expectedOccupied n m p - exponentialOccupancyApproximation n m p| ≤
+      (m : ℝ) * (p : ℝ) ^ 2 / (n : ℝ) :=
+  expectedOccupied_exponential_error hn hp
+    (exponentialOccupancyErrorBound_sq hn hp)
 
 /-- Abstract per-target probabilities for two messages. The joint probabilities are
 kept separate so targetwise independence remains a visible premise. -/
