@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 20,
+  "next_id": 21,
   "tasks": [
     {
       "id": "T-0001",
@@ -162,12 +162,21 @@
     },
     {
       "id": "T-0019",
-      "status": "TODO",
+      "status": "DONE",
       "size": "M",
       "after": [
         "T-0018"
       ],
       "summary": "Prove cone-projection span reduction and homogeneity"
+    },
+    {
+      "id": "T-0020",
+      "status": "TODO",
+      "size": "L",
+      "after": [
+        "T-0019"
+      ],
+      "summary": "Derive the membrane update quadratic remainder"
     }
   ]
 }

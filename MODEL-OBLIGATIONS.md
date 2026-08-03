@@ -94,7 +94,14 @@ isolates the learned approximation assumption in equation (204).
 A constructive sufficient active-region account is now provided in
 `IPNPCNS/Model/ActiveFace.lean`. It proves equation (199) from a finite-generator
 KKT/Moreau certificate and handles the empty face and overlapping boundary
-certificates. A more intrinsic or empirical account still requires:
+certificates. `IPNPCNS/Cone/ProjectionStructure.lean` additionally proves the global
+laws preceding that local account: equation (196), positive homogeneity of projection
+onto every closed cone, and equation (195), reduction to orthogonal projection into
+the cone span. For a finitely generated cone, `ActiveFace.lean` proves that its real
+span equals the span of its generators and is finite-dimensional even when the
+ambient Hilbert space is not.
+
+A more intrinsic or empirical account still requires:
 
 - polyhedral faces and relative interiors for finitely generated cones;
 - a necessity theorem identifying the certificate region with an intrinsic

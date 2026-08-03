@@ -632,3 +632,50 @@
   - Equations (195) and (196) compile with assumption and axiom audits.
   - The finite-generator span bridge reveals a stronger closure premise than the
     paper supplies.
+
+## PCR-2026-08-03-018
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0019 proved equations (195) and (196), including the finite-generator
+  span bridge without finite-dimensionality of the ambient Hilbert space, and the
+  Wotan queue again became empty.
+- Control judgement: continue, operate, preserve
+- Current gate: Equation (33) still represents its `O(Δt²)` term by a supplied
+  `QuadraticRemainder`. The paper's slow-input qualification suggests a concrete
+  analytic theorem, but arbitrary `L²` signals do not provide the pointwise regularity
+  needed to derive it.
+- Recommendation: Create and execute T-0020. Define the exact one-step response of
+  the first-order membrane low-pass equation as an exponentially weighted Bochner
+  integral. For a nonnegative step, positive time constant, and a Lipschitz drive on
+  the step interval, prove its decomposition into equation (33)'s frozen-input update
+  plus an explicit remainder bounded by a constant times `Δt²`. Instantiate the
+  existing `QuadraticRemainder` interface from this proof.
+- Owner decision required: none; the task derives a stated deterministic
+  approximation under the smallest visible regularity premise and does not assert
+  that biological or arbitrary `L²` inputs satisfy it.
+- Evidence:
+  - `IPNPCNS/Signal/Deterministic.lean`
+  - `IPNPCNS/Signal/Volterra.lean`
+  - `MODEL-OBLIGATIONS.md`
+  - `wotan/dev-log/T-0014.md`
+  - `wotan/dev-log/T-0019.md`
+  - Equation (33) and its slow-feedforward qualification in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Mathlib's vector-valued interval-integral API may make the exact exponential
+    kernel integral more costly than the scalar calculation.
+  - A bound using `L / (2τ)` is available by discarding exponential decay; retaining a
+    sharper constant is optional and should not obscure the quadratic order.
+- Proposed actions:
+  - Add T-0020 after T-0019 and formalize the exact low-pass step for a complete real
+    normed space.
+  - Prove the constant-drive integral identity and isolate the varying-drive error.
+  - Bound the error from a Lipschitz hypothesis and build a concrete
+    `QuadraticRemainder` witness for equation (33).
+  - Preserve the existing abstract interface as the correct endpoint for signals
+    without the new regularity premise.
+- Revisit when:
+  - The exact integral decomposition and quadratic norm bound compile.
+  - Vector-valued integration reveals a missing hypothesis that changes the model
+    interpretation.
