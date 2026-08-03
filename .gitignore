@@ -1,3 +1,11 @@
-tmp/
-.lake/
+# Lean build products
+/.lake/
+
+# Local report builds and audit workspaces
+/tmp/
+
+# Author-supplied source archives used during the conformance audit
+/arXiv-*.tar.gz
+
+# macOS metadata
 .DS_Store
