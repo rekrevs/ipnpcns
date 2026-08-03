@@ -6,5 +6,7 @@ import IPNPCNS.Cone.Operations
 import IPNPCNS.Cone.DoubleRejection
 import IPNPCNS.Cone.Intersection
 import IPNPCNS.Cone.Examples
+import IPNPCNS.Approx.Polarization
+import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Learning.NNLS
 import IPNPCNS.Model.Population

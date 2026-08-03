@@ -141,3 +141,36 @@
 - Revisit when:
   - T-0006 resolves or corrects the printed constants.
   - T-0007 identifies the precise face-selection hypotheses.
+
+## PCR-2026-08-03-005
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0006 verified the sharp constants in equations (162) and (171).
+- Control judgement: continue, operate
+- Current gate: Equation (199) remains an assumed field; a constructive active-face
+  theorem is the next bridge from cone geometry to the population interface.
+- Recommendation: Execute T-0007 using finite generators and KKT-style sufficient
+  conditions. Prefer a theorem that constructs `projection_eq_face` over a selected
+  region; defer an intrinsic relative-interior equivalence if it is not needed for
+  that bridge.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes the selected
+  continuation.
+- Evidence:
+  - `IPNPCNS/Approx/Polarization.lean`
+  - `IPNPCNS/Approx/SparseGram.lean`
+  - `wotan/dev-log/T-0006.md`
+- Uncertainty:
+  - Mathlib may represent finitely generated cones through positive spans rather than
+    a specialized polyhedral-cone type.
+  - The paper's phrase “region associated with a face” does not specify boundary tie
+    handling; sufficient active-set inequalities are likely the faithful first target.
+- Proposed actions:
+  - Define the selected generator cone and active face span.
+  - State primal-membership, residual-polar, and complementarity conditions that
+    certify the face-span projection as the cone projection.
+  - Instantiate the T-0005 population interface from the certificate.
+- Revisit when:
+  - T-0007 yields a constructive equation (199).
+  - Degenerate active sets expose a scope mismatch that affects the population model.
