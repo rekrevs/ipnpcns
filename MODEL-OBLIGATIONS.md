@@ -5,14 +5,18 @@ They are not admitted as hidden axioms in the Lean development.
 
 ## Finite subspaces and matrix representations
 
-`IPNPCNS/Subspace/Basic.lean`, `FiniteMatrix.lean`, `Comparison.lean`, and
-`Examples.lean` verify the intrinsic operations in equations (12)--(23), the range
-identity `Col(A Aᵀ) = Col(A)`, and the trace/Frobenius comparisons (24), (27)--(29).
+`IPNPCNS/Subspace/Basic.lean`, `FiniteMatrix.lean`, `Comparison.lean`, `Examples.lean`,
+and `MoorePenrose.lean` verify the intrinsic operations in equations (12)--(23), the
+range identity `Col(A Aᵀ) = Col(A)`, and the trace/Frobenius comparisons (24),
+(27)--(29).
 
-Mathlib 4.31 has no general Moore--Penrose matrix API. The exact `A A⁺` spelling of
-the canonical projector is therefore scheduled as T-0015 rather than assumed. This
-does not affect the verified subspaces or their orthogonal projectors; it only leaves
-one finite matrix representation theorem package open.
+Because mathlib 4.31 has no bundled general Moore--Penrose matrix API, the project
+constructs one from the linear equivalence between `ker(A)ᗮ` and `range(A)`. The
+construction is valid for arbitrary finite rectangular real matrices, including zero
+and rank-deficient matrices. All four Penrose equations and uniqueness are proved.
+The products `A A⁺` and `A⁺ A` are identified with the orthogonal projectors onto the
+column and row spaces, respectively, and the matrix renderings of equations (12),
+(15)--(20), and (22) are connected to the intrinsic T-0009 theorems.
 
 ## Deterministic signals and filters
 

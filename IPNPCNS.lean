@@ -12,6 +12,7 @@ import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Subspace.Basic
 import IPNPCNS.Subspace.FiniteMatrix
+import IPNPCNS.Subspace.MoorePenrose
 import IPNPCNS.Subspace.Comparison
 import IPNPCNS.Subspace.Examples
 import IPNPCNS.Learning.NNLS

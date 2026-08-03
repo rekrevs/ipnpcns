@@ -463,3 +463,40 @@
   - Retain T-0017 and T-0018 as explicit later analytic coverage.
 - Revisit when:
   - T-0015 selects and verifies a maintainable pseudoinverse construction.
+
+## PCR-2026-08-03-014
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0015 constructed the finite real Moore--Penrose inverse, proved its
+  uniqueness and all four Penrose equations, and recovered the paper's matrix
+  renderings through equation (22).
+- Control judgement: continue, operate
+- Current gate: T-0016 is the remaining deterministic learning gap. Strict
+  coefficient contraction is correctly impossible in the rank-deficient case, but
+  convergence to the nonempty minimizer set has not yet been established.
+- Recommendation: Execute T-0016 next. Work in the finite coefficient Euclidean
+  space, prove a Fejér descent inequality for the projected-gradient map from the
+  upper spectral bound and `0 < ε < 2/L`, derive square-summable steps and cluster
+  point optimality, and use finite-dimensional compactness plus Fejér monotonicity to
+  identify a limit. Do not add a positive lower singular-value bound.
+- Owner decision required: none; the rank-deficient endpoint and its scope were fixed
+  by PCR-2026-08-03-009.
+- Evidence:
+  - `IPNPCNS/Subspace/MoorePenrose.lean`
+  - `IPNPCNS/Subspace/Basic.lean`
+  - `IPNPCNS/Subspace/FiniteMatrix.lean`
+  - `wotan/dev-log/T-0015.md`
+- Uncertainty:
+  - Mathlib may not expose an end-to-end finite-dimensional Fejér convergence theorem
+    with the exact hypotheses needed here.
+  - A direct subsequence/compactness proof may be shorter and more auditable than
+    adapting a generic fixed-point iteration hierarchy.
+- Proposed actions:
+  - Execute T-0016 without a lower spectral bound.
+  - Reuse T-0008's minimizer/fixed-point equivalence and T-0010's common-prediction
+    theorem rather than reproving optimization algebra.
+- Revisit when:
+  - T-0016 establishes convergence to a selected minimizer or exposes a genuinely
+    missing compactness lemma.
