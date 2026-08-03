@@ -207,7 +207,7 @@
     },
     {
       "id": "T-0024",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0023"

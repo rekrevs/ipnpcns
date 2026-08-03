@@ -957,3 +957,58 @@
 - Revisit when:
   - The process-history PDF has passed the same compilation, extraction, structural,
     and page-by-page visual QA standard.
+
+## PCR-2026-08-03-025
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: closure-review
+- Trigger: T-0024 completed the evidence-based process history, including the
+  checksum-bounded audit of the full Codex session trace identified by the owner, and
+  its final PDF passed compilation, extraction, structural, integrity, and 25-page
+  visual QA.
+- Control judgement: stop, preserve
+- Current gate: The owner-approved program is complete: the selected mathematical
+  scope is kernel checked, the authoritative LaTeX archive has been audited against
+  it, and two deliberately distinct reader-facing reports have passed artifact QA.
+  Remaining entries in `MODEL-OBLIGATIONS.md` require new stochastic, biological,
+  generic analytic, or intrinsic-face specifications; they are preserved boundaries,
+  not unfinished proofs within the approved theorem contracts.
+- Recommendation: Complete T-0024, preserve the Lean tree, source audit, evidence
+  audits, reports, Wotan records, and project-control history in Git, and create no
+  artificial continuation task. Reopen only for a source revision, a newly specified
+  model bridge, independent review findings, or an explicit extension request.
+- Owner decision required: none; PCD-2026-08-03-001 and PCD-2026-08-03-002 authorize
+  continuous execution through this source-audited two-report endpoint.
+- Evidence:
+  - complete `lake build` of 2,960 jobs
+  - `SOURCE-AUDIT.md` and `MODEL-OBLIGATIONS.md`
+  - `output/pdf/ipnpcns-scientific-formalization-report.pdf`, 24 pages, SHA-256
+    `5050dae901198332c9096be079a5b22739e5a6e1386bfc89e603fea04b2e1976`
+  - `reports/process-history-evidence.md`
+  - `reports/session-trace-audit.md` and its independently reverified 6,276-record
+    session-prefix SHA-256
+    `80e1b5977d4ff07fbfc696f319eb2a31db33d57636464e20b81d1063ba763ba5`
+  - `output/pdf/ipnpcns-formalization-process-history.pdf`, 25 pages, SHA-256
+    `d5971a97133e2f4a05a71a174ad1533f8983a124f6622f8844df6429b70b6332`
+  - clean final LaTeX log, Ghostscript decode, extracted-text review, and individual
+    inspection of all 25 rendered process-history pages
+- Uncertainty:
+  - No independent external Lean reviewer or upstream mathlib maintainer has reviewed
+    the project; kernel checking and source conformance do not replace such review.
+  - The formalization does not establish empirical CNS adequacy, unspecified
+    stochastic learning, every convolution model, or a complete intrinsic
+    polyhedral-face theory.
+  - The session audit is exhaustive only for observable tool-mediated events in the
+    fixed prefix and deliberately excludes model-internal reasoning and later events.
+- Proposed actions:
+  - Mark T-0024 done and leave the executable Wotan queue empty.
+  - Commit the process report, evidence audits, closure records, and final PDF without
+    tracking the supplied source archive.
+  - Treat every future extension as a new theorem contract with its own source and
+    verification gate.
+- Revisit when:
+  - The paper or authoritative source changes.
+  - A precise new stochastic, biological, analytic, or face-theoretic contract is
+    supplied.
+  - Independent review finds a theorem, abstraction, source-mapping, or report defect.

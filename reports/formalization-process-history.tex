@@ -1,0 +1,1543 @@
+\documentclass[11pt,a4paper]{article}
+
+\newcommand{\ReportShortTitle}{From informal claims to checked theorems}
+\newcommand{\ReportHeaderRight}{Process history}
+\usepackage{reports/ipnpcns-report}
+
+\hypersetup{
+  pdftitle={From Informal Claims to Checked Theorems: An Evidence-Based History of the IPNPCNS Formalization},
+  pdfauthor={IPNPCNS formalization project},
+  pdfsubject={Evidence-based history of a Lean formalization and verification project},
+  pdfkeywords={Lean, formalization, proof development, project history, convex cones, verification evidence}
+}
+
+\newcommand{\artifact}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\commit}[1]{\texttt{#1}}
+\newcommand{\ev}[1]{%
+  \hyperref[ev:#1]{\textcolor{ReportBlue}{\textsf{\scriptsize[#1]}}}}
+\newcommand{\evidenceitem}[2]{%
+  \item[\textbf{#1}]\phantomsection\label{ev:#1}#2}
+
+\newtcolorbox{turningpoint}[1][]{
+  enhanced,
+  breakable,
+  colback=ReportWarm,
+  colframe=ReportGold,
+  boxrule=0.8pt,
+  arc=1.2mm,
+  left=2.5mm,right=2.5mm,top=2mm,bottom=2mm,
+  title={#1},
+  fonttitle=\bfseries,
+  coltitle=ReportInk
+}
+
+\newtcolorbox{evidencebox}[1][]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=ReportCyan,
+  boxrule=0.65pt,
+  arc=1.2mm,
+  left=2.5mm,right=2.5mm,top=2mm,bottom=2mm,
+  title={#1},
+  fonttitle=\bfseries,
+  coltitle=ReportNavy
+}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[ReportNavy] (current page.north west)
+      rectangle ([yshift=-93mm]current page.north east);
+    \fill[ReportGold] ([yshift=-93mm]current page.north west)
+      rectangle ([yshift=-97mm]current page.north east);
+    \fill[ReportWarm] ([yshift=27mm]current page.south west)
+      rectangle (current page.south east);
+  \end{tikzpicture}
+
+  \vspace*{13mm}
+  {\color{white}\sffamily\bfseries\fontsize{29}{34}\selectfont
+    From Informal Claims\par
+    to Checked Theorems\par}
+  \vspace{7mm}
+  {\color{white}\sffamily\Large
+    An evidence-based history of the IPNPCNS formalization\par}
+
+  \vfill
+
+  \begin{tcolorbox}[
+    colback=white,
+    colframe=ReportGold,
+    boxrule=0.8pt,
+    arc=1.5mm,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+  ]
+  \begin{tabularx}{\linewidth}{@{}L{39mm}Y@{}}
+    \textbf{Subject} &
+      How a 60-page interdisciplinary paper became a layered Lean development,
+      and how proof failures, specification boundaries, and audits shaped the result \\
+    \textbf{Primary record} &
+      Wotan task logs, project-control decisions, Git states, compiler and build
+      output, source audit, and a checksum-bounded Codex session trace \\
+    \textbf{Final proof corpus} &
+      31 Lean modules, 8,367 lines, 439 theorem or lemma declarations, and no
+      admitted proofs or project-specific axioms \\
+    \textbf{Historical stance} &
+      Causal reconstruction with explicit evidence classes; not a task diary and
+      not a claim that the final architecture was inevitable \\
+    \textbf{Date} & August 2026
+  \end{tabularx}
+  \end{tcolorbox}
+
+  \vspace{12mm}
+  {\large\color{ReportNavy}\textbf{IPNPCNS formalization project}}\par
+  \vspace{2mm}
+  {\color{ReportGray}
+    A companion to the separate scientific report on the verified mathematics.}
+\end{titlepage}
+
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+
+\begin{abstract}
+This report reconstructs how the mathematical claims in a paper on neural
+population computation were converted into a machine-checked Lean development.
+Its central thesis is that the work did not proceed by translating formulas in
+order. It proceeded by repeated \emph{contract refinement}: an informal claim was
+given an explicit domain, closure convention, quantifier structure, and verification
+boundary; Lean and mathlib then supplied counterpressure through type errors,
+missing infrastructure, counterexamples, and proof obligations; the resulting
+contract was either proved, split, specialized, or retained as a visible premise.
+
+The history is unusually well documented. Git preserves 24 curated checkpoints
+through the first report. Wotan logs and project-control records preserve declared
+scope and steering decisions. A 50 MB, checksum-bounded Codex session prefix also
+preserves the dense work between commits: full additions and diffs for discarded
+scratch proofs, compiler diagnostics, theorem-name probes, and migrations into the
+permanent modules. This record permits a distinction between ordinary elaboration
+failures, genuine mathematical obstructions, architectural changes of proof, and
+late verification or typesetting corrections.
+
+Several episodes were decisive. A coordinate-free Moreau/double-rejection pilot
+validated the general Hilbert-space architecture. Rank deficiency disproved strict
+coefficient contraction and forced a Fejer/compactness convergence proof. Missing
+polyhedral-face, Moore--Penrose, and Hilbert--Schmidt APIs led respectively to
+sufficient active-set certificates, an effective-map pseudoinverse, and a compact
+Volterra construction by finite-rank approximation. Analytic and probabilistic
+claims were first isolated behind named interfaces; some were later discharged by
+Lipschitz, exponential-error, or independent-product theorems, while biological
+learning premises remained explicit. A final audit against the LaTeX source found no
+material mathematical discrepancy in the claimed theorem set.
+
+The resulting lesson is methodological rather than celebratory. Fast autonomous
+formalization remains credible only when theorem contracts, discarded attempts,
+assumption boundaries, build evidence, and source conformance are all preserved as
+different forms of evidence.
+\end{abstract}
+
+\begingroup
+\small
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+\clearpage
+
+\pagenumbering{arabic}
+
+\section{The history this report tells}
+\label{sec:purpose}
+
+There are two legitimate accounts of a formalization, and confusing them weakens
+both. The companion scientific report asks what the model says, which theorems were
+proved, which assumptions they require, and what machine checking certifies. This
+report asks a different question: how did the final theorem set, architecture, and
+standard of evidence come into being? The distinction was made an explicit closure
+requirement before the proof phase ended. \ev{E23}\ev{E24}
+
+The answer cannot be a list of tasks. A chronological list would show that one file
+followed another, but not why finite subspaces preceded pseudoinverses, why a strict
+NNLS contraction bifurcated into two convergence theorems, or why a generic
+convolution claim became a concrete causal Volterra theorem. The useful unit of
+history is therefore a \emph{causal development arc}: a claim, the pressure applied
+to its first formal contract, the decision that followed, and the mathematical
+object that survived.
+
+\begin{keyresult}[Narrative thesis]
+The formalization advanced through progressive theorem-contract refinement. Its
+most important results came not only from completing planned proofs but from learning
+which distinctions the paper's prose left implicit: pointwise image versus closed
+conic hull, deterministic implication versus probability theorem, prediction
+uniqueness versus coefficient uniqueness, a concrete boundary convention versus a
+generic convolution, and mathematical realization versus biological validity.
+\end{keyresult}
+
+This pattern resembles the conjecture--criticism--revision cycle familiar from
+mathematical practice \cite{lakatos1976}, but here the criticism was partly mechanized. Lean did not
+decide research scope. It did make type, domain, dependency, and logical gaps
+impossible to ignore. Project control supplied the complementary decision layer:
+whether a gap should be repaired, exposed as a premise, decomposed, or left outside
+the theorem set. \ev{E02}\ev{E07}\ev{E10}\ev{E14}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=8mm and 9mm,
+  every node/.style={font=\small,align=center},
+  box/.style={draw=ReportBlue,rounded corners=1mm,fill=ReportPale,
+    minimum width=28mm,minimum height=12mm,inner sep=2mm},
+  boundary/.style={draw=ReportGold,rounded corners=1mm,fill=ReportWarm,
+    minimum width=28mm,minimum height=12mm,inner sep=2mm},
+  arrow/.style={-{Latex[length=2.2mm]},thick,draw=ReportGray}
+]
+  \node[box] (claim) {informal claim\\and context};
+  \node[box,right=of claim] (contract) {explicit theorem\\contract};
+  \node[box,right=of contract] (pressure) {Lean and library\\counterpressure};
+  \node[boundary,below=of pressure] (decision) {prove, split,\\specialize, or expose};
+  \node[box,left=of decision] (kernel) {kernel-checked\\endpoint};
+  \node[box,left=of kernel] (audit) {signature, axiom,\\and source audit};
+  \draw[arrow] (claim) -- (contract);
+  \draw[arrow] (contract) -- (pressure);
+  \draw[arrow] (pressure) -- (decision);
+  \draw[arrow] (decision) -- (kernel);
+  \draw[arrow] (kernel) -- (audit);
+  \draw[arrow] (audit.west) -- ++(-6mm,0) |- node[pos=0.25,left,
+    text=ReportGray,font=\scriptsize]{reopen if needed} (claim.south);
+\end{tikzpicture}
+\caption{The recurring development cycle. The arrows describe logical
+counterpressure and revision, not a rigid procedural sequence.}
+\label{fig:cycle}
+\end{figure}
+
+\subsection{A result without inevitability}
+
+The final tree is clean: named modules, stable public endpoints, a complete build,
+and a source audit. That cleanliness is an endpoint property. It should not be read
+backward as evidence that the path was direct. The session trace records hundreds of
+intermediate patches, temporary theorem probes, failed rewrites, typeclass problems,
+and deleted scratch files. Several permanent modules were literally moved from
+multi-stage scratch developments only after their statements and proof routes had
+stabilized. \ev{E26}
+
+Nor did every failure have equal significance. An unavailable theorem name is an API
+lookup problem. A deterministic heartbeat timeout may indicate an elaboration shape
+that should be redesigned. A nonzero kernel vector fixed by an iteration is a
+mathematical counterexample to strict contraction. The history becomes informative
+only when these are separated.
+
+\section{Evidence and reconstruction}
+\label{sec:evidence}
+
+\subsection{Five kinds of record}
+
+The reconstruction uses five provenance classes. No single one is treated as a
+complete account.
+
+\begin{table}[htbp]
+\centering
+\caption{Historical evidence classes and their proper use.}
+\label{tab:evidence-classes}
+\begin{tabularx}{\linewidth}{@{}C{11mm}L{35mm}Y@{}}
+\toprule
+\textbf{Class} & \textbf{Record} & \textbf{What it supports} \\
+\midrule
+C & Contemporaneous task record &
+Declared context, acceptance criteria, implementation summary, obstacle, and
+verification evidence at task closeout. \\
+D & Steering decision &
+What evidence and uncertainty were considered at a gate, and why the next direction
+was selected. \\
+G & Git state &
+Durable file content, order of curated checkpoints, commit timestamps, and the diff
+between accepted states. \\
+R & Retrospective audit &
+Later source conformance, coverage classification, trust review, and report QA. It
+corroborates the final state but must not be projected backward as prior knowledge. \\
+S & Session trace &
+Tool-mediated patches, scratch evolution, compiler feedback, and contemporaneous
+updates between commits. It does not reveal unexpressed cognition. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The evidence identifiers in the margin-like blue brackets refer to the ledger in
+\cref{app:evidence-ledger}. That ledger, in turn, points to the repository artifacts
+and the separately bounded session audit. Material historical propositions in this
+report are tied to at least one such identifier.
+
+\subsection{The session trace changes the record}
+
+An initial evidence review contained an overly cautious statement: no record was
+known to preserve every abandoned tactic or scratch proof. The owner pointed to the
+full Codex JSONL session under \artifact{~/.codex/}. Inspection changed the
+historiographical conclusion. \ev{E26}
+
+The audited prefix contains 427 successful patch-completion events. Of these, 174
+changes concern 33 scratch, probe, or axiom-audit files: 34 additions, 128 updates,
+and 12 deletions. Added files carry full content; updates carry unified diffs; command
+outputs retain the Lean diagnostics. The 33 patches to \artifact{ScratchT17.lean}
+and 26 patches to \artifact{ScratchT18.lean}, for example, survive even though those
+paths do not exist in the final tree. The trace also records their moves into the
+wavelet and Volterra modules. \ev{E26}
+
+\begin{evidencebox}[Session-trace boundary]
+The main session prefix is fixed by a SHA-256 digest and a 6,276-record cutoff. The
+audit reads observable messages, tool calls, patches, and outputs. It deliberately
+does not reproduce model-internal reasoning records or copy the raw 50 MB log into
+the repository. Thus the report can reconstruct expressed proof search without
+turning a private operational log into an indiscriminate appendix.
+\end{evidencebox}
+
+This evidence does not make Git redundant. The trace shows what was tried; Git shows
+what was accepted. Wotan explains the intended contract; project control explains
+why work changed direction. A compiler error proves only that one intermediate term
+failed. A later successful build and axiom audit establish the status of the accepted
+endpoint.
+
+\subsection{Contemporaneous knowledge and later interpretation}
+
+Dates matter because the LaTeX source audit occurred after proof expansion closed.
+Early work used the rendered PDF, text extraction, visual inspection, and local
+mathlib experiments. The later source audit confirmed the closure convention,
+polar sign, quantifiers, constants, and qualifications, but that confirmation was not
+available to guide the first proofs. \ev{E01}\ev{E23}
+
+Accordingly, phrases such as ``the source confirmed'' refer to retrospective
+corroboration. Phrases such as ``the task record identified'' refer to evidence
+available at the time. Interpretive claims -- for example, that interfaces acted as
+epistemic firebreaks -- are explicitly presented as conclusions drawn from multiple
+records, not as quotations from any one log.
+
+\section{The initial problem and the first bet}
+\label{sec:initial}
+
+\subsection{A paper broader than a theorem list}
+
+The repository began with a 60-page PDF and no Git or Wotan metadata. The paper mixed
+linear-subspace geometry, closed convex cones, finite probability, temporal signal
+analysis, nonnegative least squares, approximate embeddings, and a biological
+interpretation. Its central mathematical contributions appeared mainly as numbered
+equations and proof blocks rather than a conventional theorem hierarchy. The first
+work therefore mapped equations, definitions, qualifications, and dependencies
+rather than searching only for labels such as ``Theorem.'' \ev{E01}\ev{E26}
+
+The feasibility review separated three questions:
+
+\begin{enumerate}[label=\arabic*.]
+  \item Do the mathematical conclusions follow from precise assumptions?
+  \item Do idealized learning and population interfaces imply the claimed cone
+    operations?
+  \item Do actual neural populations satisfy those interfaces?
+\end{enumerate}
+
+Lean could address the first and conditional forms of the second. The third remained
+empirical. This separation was not a final-report disclaimer added after success; it
+was part of the first task contract and shaped the module boundary between general
+mathematics and \artifact{Model/Population.lean}. \ev{E01}\ev{E05}
+
+\subsection{The cautious forecast and the compressed calendar}
+
+The initial report estimated four to eight person-weeks for a human Moreau and
+double-rejection pilot and twelve to twenty-four person-months for broad Sections
+2--5 coverage. Minutes later, the owner clarified that an autonomous AI agent was to
+perform the work and expected hours rather than human project time. The response
+reframed the four proposed work packages as Wotan idea tasks and selected the pilot
+as the first decisive test. \ev{E01}\ev{E26}
+
+The Git record from the feasibility commit through the source-audit commit spans
+about five hours on 3 August 2026; the first scientific-report commit followed less
+than half an hour later. This is a fact about preserved timestamps, not a controlled
+productivity comparison. The original estimate assumed an experienced human,
+maintainable mathlib-based work, and conventional review. The realized project used
+an autonomous agent, aggressive scratch prototyping, a fixed local environment, and
+a publication-oriented but repo-local theorem scope. It did not upstream a general
+library or validate biology. \ev{E01}\ev{E25}\ev{E26}
+
+\begin{turningpoint}[The first bet]
+Instead of attempting the paper in order, the project chose one identity that
+exercised all foundational decisions: metric projection, the source's non-positive
+polar, Moreau decomposition, closure-safe cone operations, and the passage from a
+pointwise equality to equality of closed conic hulls. If that identity failed under
+the paper's quantification, the architecture would be reconsidered before broader
+coverage. \ev{E01}\ev{E02}
+\end{turningpoint}
+
+\section{Contract before proof}
+\label{sec:contract}
+
+\subsection{Four ambiguities that could not remain informal}
+
+The first permanent Lean code was preceded by
+\artifact{FORMALIZATION-SPEC.md}. It fixed conventions whose omission would have
+allowed an apparently successful proof to mean something different from the paper.
+\ev{E02}
+
+\begin{table}[htbp]
+\centering
+\caption{The initial theorem contract and its downstream consequences.}
+\label{tab:initial-contract}
+\begin{tabularx}{\linewidth}{@{}L{27mm}L{48mm}Y@{}}
+\toprule
+\textbf{Issue} & \textbf{Frozen interpretation} & \textbf{Why it mattered later} \\
+\midrule
+Closure &
+Every arbitrary conic hull, sum, and image used by the cone algebra is closed in the
+norm topology. &
+Projected generator sets could not be treated as if their pointwise image were
+already a closed cone; absorption and intersection required explicit hull arguments. \\
+Polar sign &
+The source polar is
+\(C^\circ=\{z:\langle z,y\rangle\leq0\text{ for all }y\in C\}\), opposite in sign
+to mathlib's ordinary dual-cone orientation. &
+Moreau residuals, reflection laws, and rejection formulas could share one
+paper-facing membership theorem without sign drift. \\
+Quantification &
+The cone core uses arbitrary real Hilbert spaces and arbitrary closed convex cones;
+finite generation belongs to a separate population layer. &
+The headline identities were not weakened to matrix or polyhedral special cases,
+while finite active faces could later be introduced without contaminating the core. \\
+Image equality &
+A pointwise projection identity and equality of their closed conic hulls are separate
+proof obligations. &
+The double-rejection theorem first identifies individual projections and only then
+lifts the result extensionally through \(\Conic\). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The Lean and mathlib versions were pinned at the same gate. Mathlib's Hilbert
+projection theorem supplied existence of a minimizer, but no bundled cone-specific
+Moreau API supplied the paper's exact bridge. A local probe demonstrated that a
+noncomputable metric projection with membership and minimality could compile. The
+session trace preserves even the correction of one mistaken singular-value API name
+inside that probe. \ev{E01}\ev{E02}\ev{E26}
+
+\subsection{Why coordinate-free geometry came first}
+
+The specification deliberately avoided matrices in the core. Metric projection,
+polarity, and orthogonality are the mathematical content of Moreau decomposition;
+matrix coordinates are one representation. This choice later paid twice. The
+subspace theory could be proved before a Moore--Penrose inverse existed, and the
+finite population cones could live inside infinite-dimensional signal Hilbert
+spaces because only their spans needed finite dimensionality. \ev{E02}\ev{E09}\ev{E15}\ev{E19}
+
+This was not merely a preference for abstraction. It was a dependency decision. Had
+the pilot been expressed through pseudoinverse matrices, the absence of a mathlib
+Moore--Penrose API would have blocked the first gate for a reason unrelated to the
+headline cone identity.
+
+\section{The geometric pilot becomes an architecture}
+\label{sec:pilot}
+
+\subsection{Building the missing Moreau stack}
+
+The pilot introduced a chosen metric projection, its variational characterization,
+the polar residual, projection--residual orthogonality, Moreau decomposition,
+bipolarity, and closure-safe conic projection and rejection. The final double-
+rejection proof followed the paper's semantic architecture: establish a pointwise
+orthogonal cone--polar decomposition, use Moreau uniqueness to identify the second
+projection, and only then take closed conic hulls. \ev{E03}
+This construction is the project-specific formal counterpart of the classical
+polar-cone decomposition \cite{moreau1962,bauschke2017}.
+
+The session trace shows a denser path than the commit. A failed rewrite in the metric
+projection module, an unavailable local theorem identifier, a failed linear-
+arithmetic closure, and an application mismatch in the operation layer occurred
+within roughly three minutes. These were local elaboration and API repairs. They did
+not force a change in the mathematical proof plan, which was already fixed by the
+contract. \ev{E26}
+
+A separate infrastructure failure did occur: dependency materialization was
+interrupted by restricted network access. The recovery used the installed,
+version-matched mathlib cache and obtained only the missing pinned dependency. The
+resulting project retained a reproducible version manifest. The distinction is
+important: network recovery changed how dependencies were materialized, not what the
+theorem asserted. \ev{E03}\ev{E26}
+
+\subsection{What passing the pilot established}
+
+The pilot did more than prove one equation. It demonstrated that:
+
+\begin{itemize}
+  \item the source polar convention could be isolated cleanly;
+  \item mathlib's Hilbert projection theorem was sufficient foundation for a local
+    Moreau theory;
+  \item arbitrary closed-cone quantification was viable;
+  \item closure bookkeeping was manageable without hidden image-closedness
+    assumptions; and
+  \item the accepted endpoints could be built without \texttt{sorry} or custom
+    axioms and audited at the declaration level.
+\end{itemize}
+
+These were the reasons the project continued, not merely the speed with which the
+first commit appeared. Project control recorded the next gate as the much longer
+intersection identity. \ev{E03}\ev{E04}
+
+\subsection{Intersection and the first decomposition decision}
+
+Before formalizing the intersection identity, the work considered whether polar
+algebra might yield a shorter proof. The rejection-only form still required the
+paper's four Moreau decompositions and cross-term control, so the direct geometry was
+retained. One large theorem needed an increased heartbeat allowance, but the
+kernel-checked term added no assumptions. \ev{E04}
+
+At the same time, the approximate-invariance section was divided. The deterministic
+projection-error implication was formalized with explicit relevant-vector and
+transformed-optimality premises. The polarization step and sparse Gram bound were
+independent and became a separate task. The random Johnson--Lindenstrauss guarantee
+remained outside the deterministic theorem. This was the first repeated use of a
+pattern that later dominated the project: prove the implication whose assumptions
+are precise, name the missing bridge, and keep probability distinct from geometry.
+\ev{E04}\ev{E06}
+
+\section{Interfaces as epistemic firebreaks}
+\label{sec:interfaces}
+
+An explicit premise is sometimes mistaken for a failed formalization. In this
+project, named interfaces had a more disciplined role. They prevented the proof
+assistant from converting underspecified prose into hidden axioms while allowing
+valid downstream consequences to be checked. Some interfaces remained model
+boundaries; others were later discharged when a precise witness became available.
+
+\begin{table}[htbp]
+\centering
+\caption{Representative interface life cycles.}
+\label{tab:interface-life}
+\begin{tabularx}{\linewidth}{@{}L{31mm}L{53mm}Y@{}}
+\toprule
+\textbf{Claim} & \textbf{Initial formal treatment} & \textbf{Later status} \\
+\midrule
+Population approximation (204) &
+Named support-selected approximation premise in \artifact{PopulationRegion}. &
+Remains a model premise; only (206)--(208) and zero-error hull consequences are
+proved. No learning or biological dynamics is invented. \\
+Stochastic NNLS convergence &
+Recorded as an obligation because ``standard assumptions'' supplies no filtration,
+sampling law, or moment bounds. &
+Remains outside scope; deterministic batch convergence was developed instead. \\
+Active-face formula (199) &
+Initially a field of the population interface. &
+Discharged by a finite sufficient KKT/Moreau certificate; necessity and a full
+relative-interior partition remain unclaimed. \\
+Compact convolution &
+Boundary convention, finite-rank approximation, and compactness were separate named
+premises. &
+Discharged for a concrete nonzero causal unit-step Volterra operator, not for every
+kernel or boundary convention. \\
+Membrane \(O(\Delta t^2)\) term &
+A named \artifact{QuadraticRemainder} interface. &
+Discharged under an explicit Lipschitz drive with bound
+\((L/\tau)|\Delta t|^2\). \\
+Exponential occupancy approximation &
+Represented by a named error-bound interface after the exact finite expectation. &
+Discharged constructively for \(0<p\leq n\), with signed and absolute error bounds. \\
+Two-message overlap &
+Conditional on uniform marginals and targetwise independence. &
+Exact for a later Cartesian-product experiment; still not a statement that
+biological messages are independent. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The population layer made the boundary especially clear. Finite NNLS fixed points
+and the error implications were provable. Support selection, learned approximation,
+and biological adequacy were not. Recording the latter in
+\artifact{MODEL-OBLIGATIONS.md} meant that later progress could target one obligation
+without pretending the whole interface had been derived. \ev{E05}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=7mm and 13mm,
+  every node/.style={font=\small,align=center},
+  start/.style={draw=ReportGold,fill=ReportWarm,rounded corners,
+    minimum width=37mm,minimum height=11mm},
+  end/.style={draw=ReportBlue,fill=ReportPale,rounded corners,
+    minimum width=38mm,minimum height=11mm},
+  arrow/.style={-{Latex[length=2mm]},thick,draw=ReportGray}
+]
+  \node[start] (iface) {named interface};
+  \node[end,right=of iface,yshift=15mm] (remain) {retained boundary\\equation (204), stochastic learning};
+  \node[end,right=of iface] (special) {concrete witness\\causal Volterra operator};
+  \node[end,right=of iface,yshift=-15mm] (derive) {general discharge\\membrane and occupancy bounds};
+  \draw[arrow] (iface) -- (remain);
+  \draw[arrow] (iface) -- (special);
+  \draw[arrow] (iface) -- (derive);
+\end{tikzpicture}
+\caption{A named interface had three legitimate outcomes. Remaining explicit was not
+an admission of proof; specialization and discharge required new mathematics.}
+\label{fig:interfaces}
+\end{figure}
+
+The historical lesson is that an interface is useful only if it is visible,
+source-shaped, and revisitable. A structure field whose name and contract match the
+paper's approximation can be audited. A definition that simply says a population
+``implements projection'' cannot.
+
+\newpage
+\section{Expansion by dependency, not by paper order}
+\label{sec:expansion}
+
+\subsection{The first empty queue}
+
+The initial four tasks ended with a verified cone core, deterministic approximation
+interfaces, finite NNLS fixed-point mathematics, and conditional population
+consequences. The queue could have stopped there. Instead, a direction review compared
+the achieved results with the paper-wide inventory and selected finite subspaces as
+the next shared foundation. This was the first expansion decision made after the
+owner's instruction to continue autonomously. \ev{E08}\ev{E09}
+
+The chosen order did not follow the article. It followed dependency and risk:
+
+\begin{enumerate}[label=\arabic*.]
+  \item establish intrinsic finite-subspace operations and comparison measures;
+  \item derive the NNLS step-size theorem from Gram bounds;
+  \item close exact cone and circuit laws;
+  \item formalize cone similarity and its finite-frame proxy;
+  \item construct the exact finite occupancy experiment; and
+  \item only then select the signal-space semantics needed by several analytic
+    examples.
+\end{enumerate}
+
+This order allowed each task to leave a reusable interface for the next without
+forcing an unresolved representation detail onto the critical path. \ev{E09}\ev{E10}\ev{E11}\ev{E12}\ev{E13}\ev{E14}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=7mm and 10mm,
+  every node/.style={font=\scriptsize,align=center},
+  core/.style={draw=ReportNavy,fill=ReportPale,rounded corners,
+    minimum width=29mm,minimum height=10mm},
+  branch/.style={draw=ReportCyan,fill=white,rounded corners,
+    minimum width=29mm,minimum height=10mm},
+  model/.style={draw=ReportGold,fill=ReportWarm,rounded corners,
+    minimum width=29mm,minimum height=10mm},
+  arrow/.style={-{Latex[length=1.8mm]},draw=ReportGray,thick}
+]
+  \node[core] (spec) {cone contract};
+  \node[core,right=of spec] (moreau) {Moreau core};
+  \node[core,right=of moreau] (exact) {exact cone laws};
+  \node[branch,below=of spec] (subspace) {intrinsic subspaces};
+  \node[branch,right=of subspace] (mp) {Moore--Penrose\\representation};
+  \node[branch,below=of moreau] (nnls) {finite NNLS};
+  \node[branch,right=of nnls] (rank) {spectral and\\rank-deficient convergence};
+  \node[model,below=of subspace] (signal) {finite-window \(L^2\)};
+  \node[model,right=of signal] (analytic) {wavelet, Volterra,\\membrane witnesses};
+  \node[model,below=of nnls] (population) {active faces and\\population interface};
+  \node[model,right=of population] (circuits) {conditional circuits};
+  \draw[arrow] (spec) -- (moreau);
+  \draw[arrow] (moreau) -- (exact);
+  \draw[arrow] (subspace) -- (mp);
+  \draw[arrow] (subspace) -- (nnls);
+  \draw[arrow] (nnls) -- (rank);
+  \draw[arrow] (moreau) -- (population);
+  \draw[arrow] (population) -- (circuits);
+  \draw[arrow] (signal) -- (analytic);
+  \draw[arrow] (mp) -- (population);
+  \draw[arrow] (rank) -- (population);
+\end{tikzpicture}
+\caption{A simplified dependency view. The historical sequence followed shared
+foundations and exposed gaps rather than the linear order of paper sections.}
+\label{fig:dependencies}
+\end{figure}
+
+\subsection{Intrinsic subspaces before pseudoinverse notation}
+
+The subspace task proved the coordinate-free content of equations (12)--(23), the
+range identity \(\Col(AA^\mathsf{T})=\Col(A)\), comparison formulas, and a concrete
+failure of distributivity. Mathlib lacked the general Moore--Penrose API needed for
+the paper's \(AA^+\) notation. Because none of those intrinsic results depended on
+that notation, project control preserved the gap as a later task rather than blocking
+the geometry. \ev{E09}
+
+This split prevented two common distortions. The project did not assume a
+pseudoinverse axiom merely to match notation, and it did not weaken the paper to
+full-rank matrices. When the representation task was later executed, the construction
+covered arbitrary rectangular, zero, and rank-deficient matrices. \ev{E15}
+
+\subsection{The effective-map solution}
+
+The final pseudoinverse did not use a full singular-value decomposition. It restricted
+a linear map to the orthogonal complement of its kernel, corestricted it to its
+range, proved the resulting effective map bijective, and inverted that equivalence.
+The two products became the orthogonal projectors onto the range and kernel
+complement; the four Penrose equations and uniqueness followed. \ev{E15}
+
+The session record shows 25 successive patches to the permanent module. Several
+failed rewrites were not failures of linear algebra but consequences of dependent
+projection instances: equality of subspaces did not make the typeclass witnesses
+definitionally identical. An extensional projector-equality lemma became the durable
+bridge. \ev{E26}
+
+This episode illustrates a recurring distinction. A coordinate-free theorem may be
+mathematically simpler and more reusable, while a source-faithful coordinate formula
+still has publication value. The appropriate architecture proves the former first
+and derives the latter as a representation theorem.
+
+\section{Failures at three different levels}
+\label{sec:failures}
+
+The polished Git history makes nearly every task appear to go from specification to
+success in one commit. The session trace shows that this is a curated fiction useful
+for version control but inadequate for history. Yet merely counting compiler errors
+would be equally misleading. The failures fall into three levels.
+
+\begin{table}[htbp]
+\centering
+\caption{Failure classes and their effects on the final development.}
+\label{tab:failure-classes}
+\begin{tabularx}{\linewidth}{@{}L{30mm}L{48mm}Y@{}}
+\toprule
+\textbf{Level} & \textbf{Typical evidence} & \textbf{Proper response} \\
+\midrule
+Elaboration and API &
+Unknown theorem name, failed rewrite, coercion mismatch, stuck typeclass inference,
+or a simplifier that sees the wrong normal form. &
+Probe the library, expose intermediate expressions, replace a brittle tactic, or add
+an extensional helper. The theorem contract normally remains unchanged. \\
+Proof architecture &
+Heartbeat timeout, unavailable abstraction, or a route that makes later obligations
+intractable. &
+Change the mathematical decomposition: use an effective map instead of SVD, direct
+quadratic-form counting instead of an eigenvalue route, or simple-function density
+instead of a custom time partition. \\
+Theorem contract &
+A counterexample, missing hypothesis, ambiguous boundary convention, or empirical
+premise. &
+Split the theorem, add the smallest visible premise, select a concrete model, or
+leave the claim outside scope. Never disguise the repair as tactic work. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Local failures: useful but not profound}
+
+The sparse Gram prototype encountered unavailable summation lemmas, coercion
+problems, and failed congruence applications over twelve patches. The NNLS prototype
+encountered missing derivative combinators and rewrite failures over thirteen
+patches. The wavelet scratch file accumulated 33 patches while interval integrals,
+trigonometric normal forms, \(L^2\) representatives, and finite examples were made to
+agree. These sequences matter because they show the actual cost of formal proof, but
+none by itself refuted the source mathematics. \ev{E06}\ev{E08}\ev{E17}\ev{E26}
+
+A better historical account records what those errors caused. In the Gram proof,
+they encouraged an explicit expansion of diagonal and ordered off-diagonal terms,
+which made the exact \(k-1\) count visible. In NNLS, they encouraged proving one
+finite loss-increment identity from which both derivative and optimality results
+could be derived. In the wavelet development, they produced reusable integer-mode
+integral lemmas rather than a collection of numerical checks.
+
+\subsection{Architectural failures: the route changes}
+
+The active-face problem began with the paper's intrinsic language of faces and
+relative interiors. Mathlib did not expose a matching polyhedral-face API. Rather
+than build a full face lattice, the project formalized the exact sufficient
+conditions used by the projection: a nonnegative active coefficient expansion,
+polar inequalities against every generator, and orthogonality. Moreau uniqueness
+then certified the selected span projection. Boundary certificates were allowed to
+overlap, with equality of the projected point proved. This certificate-centered
+view is consonant with the classical active-set treatment of nonnegative least
+squares \cite{lawson1995}. \ev{E07}
+
+This final theorem is both stronger and weaker than an informal equation (199). It is
+stronger as a machine-checkable certificate: every finite inequality is visible and
+degenerate active sets are covered. It is weaker as a classification: necessity and
+a full relative-interior partition are not claimed. Calling this a ``workaround''
+would miss the methodological point. It replaced an unavailable global theory with
+the local theorem actually needed by the population interface.
+
+The compact-convolution proof underwent an even clearer route change. A direct
+finite-partition construction generated difficult elaboration and a deterministic
+heartbeat timeout in \artifact{ScratchT18.lean}. The surviving proof introduced a
+general map from an \(L^2\) Hilbert-valued kernel to a bounded analysis operator,
+proved that indicator-constant kernels give rank-one operators, used density of
+simple functions, and concluded compactness by norm closure. This was more general
+than the planned special partition while remaining concrete about causal boundary
+conditions. \ev{E18}\ev{E26}
+
+\subsection{A mathematical obstruction: rank deficiency}
+
+The most important failure was not a Lean error. For the projected batch NNLS map,
+the familiar step condition \(0<\varepsilon<2/L\) does not imply a strict contraction
+on coefficient space when the prediction map has a nontrivial kernel. A nonzero
+kernel direction is fixed by the unprojected linear error map, so no factor \(q<1\)
+can contract every coefficient difference. The project proved this obstruction
+instead of hiding it behind a lower singular-value assumption. \ev{E10}
+
+Two honest theorems replaced the hoped-for single statement:
+
+\begin{itemize}
+  \item under positive lower and upper spectral bounds, strict contraction gives a
+    unique coefficient minimizer and geometric convergence;
+  \item with only an upper bound and a nonempty minimizer set, Fejer descent,
+    summable prediction error, finite-dimensional compactness, and a cluster
+    minimizer give convergence to \emph{some} coefficient minimizer. All minimizers
+    share the same prediction, while coefficients need not be unique.
+\end{itemize}
+
+The second proof was not a weakened version of the first. It was a different proof
+architecture forced by the geometry of the kernel. Project control recorded this as
+a redirection, and a later task completed the Fejer/compactness argument without a
+positive lower spectral bound. \ev{E10}\ev{E16}
+
+\begin{turningpoint}[Counterexamples are architectural evidence]
+The kernel obstruction did more than close a false route. It determined the public
+API: prediction uniqueness and coefficient uniqueness became separate theorems, and
+the rank-deficient convergence module could not accidentally acquire a full-rank
+hypothesis. \ev{E10}\ev{E16}
+\end{turningpoint}
+
+\section{The analytic arc: semantics before calculation}
+\label{sec:analysis-arc}
+
+\subsection{Choosing what a signal is}
+
+The signal layer could not begin from a convolution formula alone. It first selected
+Lebesgue measure restricted to \([0,T]\) and Bochner \(L^2\) classes for scalar and
+finite-vector signals. This decision immediately corrected two informal habits.
+Pointwise matrix identities had to be stated almost everywhere because \(L^2\)
+elements are equivalence classes. And the image of a closed cone under a bounded
+linear map could not simply be declared closed; the formal cone image used a closed
+conic hull. \ev{E14}
+
+The first task at this layer stopped deliberately at named interfaces for boundary
+conditions, generic convolution realization, compactness, Laplace transfer, and the
+quadratic membrane remainder. Exact linearity, norm bounds, conic aggregation, and
+finite-dictionary facts were proved. This left a coherent theorem layer without
+pretending that unspecified analytic hypotheses had been supplied by notation.
+\ev{E14}
+
+\subsection{The wavelet normalization false alarm}
+
+During the initial PDF review, extracted text made the normalization factor for the
+three Hann-windowed wavelets look suspicious. The session update records a genuine
+concern that the displayed constant might not give norm one. High-resolution
+inspection of the rendered formula resolved the scope of the square root, and later
+exact integration proved the source constant correct. \ev{E01}\ev{E17}\ev{E26}
+
+This episode is useful because it shows two distinct error channels. PDF text
+extraction can corrupt notation; a numerical or symbolic plausibility check can then
+raise the right question without settling it. The final answer required an exact
+Lean proof in the chosen recording-window measure.
+
+The proof history was substantial. \artifact{ScratchT17.lean} first probed missing
+integral theorem names, then derived integer sine and cosine integrals, product-to-sum
+identities, Hann-square expansions, means, Gram entries, and \(L^2\) inner products.
+A deterministic elaboration timeout and many local mismatches were resolved before
+the file was renamed and moved into
+\artifact{IPNPCNS/Examples/OrthonormalWavelets.lean}. Its final theorems also checked
+three NNLS examples and kept baseline subtraction separate from literal nonnegative
+firing rates. \ev{E17}\ev{E26}
+
+\subsection{A concrete compact filter, not a generic slogan}
+
+The source's compact-filter discussion did not fix every kernel extension or boundary
+convention. The formalization chose a nonzero unit-step causal response on the finite
+window, giving the Volterra operator
+\[
+  (Vx)(t)=\int_0^t x(s)\,ds.
+\]
+The final module proves its almost-everywhere integral formula, the bound
+\(\lVert V\rVert\leq T\), finite-rank approximation in operator norm, and
+compactness. It separately proves that the chosen realization is not periodic and is
+not the alternative whole-window zero-extension formula. \ev{E18}
+
+The missing Hilbert--Schmidt abstraction therefore did not become an axiom. It became
+a prompt to prove compactness from simpler certified pieces. The resulting theorem
+is narrower in kernel scope but stronger in semantic clarity than an unqualified
+claim about ``the convolution operator.''
+
+\subsection{The membrane remainder and the value of a modest constant}
+
+Equation (33)'s \(O(\Delta t^2)\) term originally remained behind a named
+\artifact{QuadraticRemainder}. An empty-queue review later selected it as a bounded
+analytic gap. The exact first-order low-pass step was written as an exponentially
+weighted Bochner integral. Under a Lipschitz premise on the net drive, subtracting
+the frozen initial drive produced an explicit remainder bounded by
+\((L/\tau)|\Delta t|^2\). \ev{E20}
+
+A sharper elementary factor of one half was considered. The final proof used the
+uniform interval bound instead, because it supplied the required step-independent
+quadratic constant with a smaller and more auditable argument. This is a small but
+representative scientific choice: formal verification need not optimize every
+constant when the claimed order and interface are preserved, but it must say which
+constant was actually proved. \ev{E20}\ev{E26}
+
+\section{The probabilistic arc: construct the experiment}
+\label{sec:probability-arc}
+
+The occupancy formula after equation (30) appears elementary, but its meaning depends
+on a sampling model. The formal experiment made each of \(m\) axons choose uniformly
+from the \(p\)-element subsets of \(n\) targets. Choices are without replacement
+within one axon and independent between axons. Treating all \(mp\) collaterals as
+independent target draws would have proved a different formula and was explicitly
+rejected. \ev{E13}
+
+The exact expected occupied-target count followed by indicator expansion and finite
+product averaging. Zero targets, zero axons, zero collaterals, and the impossible
+case \(p>n\) received separate statements. The source's exponential replacement and
+two-message overlap were initially left behind different interfaces because they
+used different extra assumptions. \ev{E13}
+
+Later empty-queue reviews returned to both interfaces. For \(0<n\) and \(p\leq n\),
+elementary exponential remainder and finite power-difference bounds proved that the
+exponential approximation is a lower bound with absolute count error at most
+\(mp^2/n\). This was a genuine discharge of an error interface. \ev{E21}
+
+The overlap statement required a different move. Two messages were sampled from the
+literal Cartesian product of the exact one-message sample space. Targetwise
+independence then followed from the construction, and expected overlap became exactly
+\(q^2/n\), where \(q\) is the exact one-message expectation. Independence was made
+structural in the selected mathematical experiment; it was not inferred for neural
+messages. \ev{E22}
+
+The session trace reveals the final proof repair. Directly unfolding the structure
+predicates failed. Changing the goals to the literal finite-expectation equalities
+made the product factorization visible, after which the existing abstract overlap
+theorem could be instantiated. \ev{E26}
+
+\section{Steering as part of the proof method}
+\label{sec:steering}
+
+Wotan and project control are subjects of this report because they influenced which
+mathematics was attempted. They are not presented as scientific evidence for the
+theorems themselves. Lean's kernel and the audited source tree play that role.
+
+\subsection{What Wotan contributed}
+
+Each task combined a claim-oriented context, acceptance criteria, hard verification
+endpoints, manual checks, risks, an approach, implementation notes, obstacles,
+evidence, and an outcome. The initial continuations were stored as inactive ideas.
+After the owner authorized continuous autonomous work, project control promoted them
+into an executable queue and permitted creation of follow-on tasks. \ev{E01}\ev{E02}
+
+This mattered most at boundaries. The sparse Gram proof was split from the already
+verified projection-error theorem. Active-face construction and deterministic NNLS
+convergence were separated from the conditional population interface. The missing
+pseudoinverse notation was preserved without delaying intrinsic subspaces or NNLS.
+The source audit and two reports were blocked behind a moving proof-phase barrier so
+that they would describe a stable theorem set. \ev{E04}\ev{E05}\ev{E09}\ev{E23}
+
+The logs also make negative scope durable. A theorem not attempted because its
+stochastic assumptions were absent does not silently disappear; it remains in
+\artifact{MODEL-OBLIGATIONS.md} and in the task outcome. This is especially important
+for interdisciplinary work, where an omitted empirical bridge can otherwise be
+mistaken for a proved consequence.
+
+\subsection{What project control contributed}
+
+Project-control reviews occurred at scientific gates and whenever the actionable
+queue became empty. Each review recorded the current evidence, uncertainty, selected
+direction, and revisit condition. The pattern was not ``always continue.'' It included
+preserve, evaluate, redirect, and eventually close proof expansion in favor of source
+conformance. \ev{E03}\ev{E09}\ev{E18}\ev{E22}\ev{E23}
+
+Three types of steering decision were especially productive:
+
+\begin{description}
+  \item[Protect the critical path.]
+  Prove coordinate-free geometry before pseudoinverse representation; separate the
+  already valid deterministic implication from an independent probability theorem.
+  \item[Change proof architecture when the mathematics demands it.]
+  Preserve the full-rank contraction theorem and create a distinct rank-deficient
+  Fejer task after the kernel obstruction.
+  \item[Reopen named boundaries selectively.]
+  When the queue emptied, choose a compact, source-shaped obligation such as span
+  reduction, the membrane remainder, or occupancy error rather than expanding into
+  an underspecified stochastic or biological program.
+\end{description}
+
+The final redirection is as important as the expansions. After the independent
+two-message theorem, the remaining open areas required a new stochastic or
+biological specification, generic transform theory, or a much larger intrinsic face
+development. Project control judged source fidelity more limiting than another small
+proof and released the LaTeX audit. \ev{E22}\ev{E23}
+
+\begin{turningpoint}[Autonomy requires visible stopping logic]
+Continuous autonomous execution did not mean that every adjacent mathematical topic
+became authorized scope. The combination of a maintained obligation register, an
+empty-queue review, and explicit revisit conditions supplied a reasoned boundary
+between productive continuation and unbounded theorem accumulation.
+\end{turningpoint}
+
+\section{The verification standard grew with the project}
+\label{sec:verification-standard}
+
+``It compiles'' meant different things at different moments. The first feasibility
+probe established only that mathlib could support a chosen metric projection. The
+final closure claim combined a complete build, proof-gap and unsafe-declaration
+scans, public theorem-signature review, a 38-endpoint axiom audit, equation-level
+source conformance, and report artifact QA. Treating these checks as interchangeable
+would erase how the standard of evidence matured. \ev{E01}\ev{E03}\ev{E23}\ev{E24}
+
+\begin{table}[htbp]
+\centering
+\caption{Layers of evidence added during the project.}
+\label{tab:verification-layers}
+\begin{tabularx}{\linewidth}{@{}C{11mm}L{39mm}Y@{}}
+\toprule
+\textbf{Layer} & \textbf{Check} & \textbf{Question answered} \\
+\midrule
+1 & Focused probe or scratch compilation &
+Does the proposed type, library bridge, or proof route elaborate in the pinned
+environment? \\
+2 & Focused module build &
+Does the accepted module compile with its actual imports and namespace? \\
+3 & Complete \artifact{lake build} &
+Does the whole dependency graph elaborate together? The final build completed 2,960
+jobs. \\
+4 & Gap and declaration scan &
+Do project sources contain \texttt{sorry}, a custom \texttt{axiom}, or an
+\texttt{unsafe} declaration? The final scans found none. \\
+5 & Signature and \texttt{\#print axioms} audit &
+Does the public theorem quantify as intended, and on which logical principles does
+the compiled constant depend? \\
+6 & LaTeX source conformance &
+Were signs, constants, domains, quantifiers, equation references, and nearby
+qualifications read correctly from the authoritative source? \\
+7 & PDF extraction and visual QA &
+Does the reader-facing artifact contain the intended text, metadata, tables,
+figures, and pagination without visual defects? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Lean's small trusted kernel checks elaborated proof terms; mathlib provides previously
+checked definitions and theorems \cite{demoura2015lean,mathlib2020}. The project adds
+no custom axiom. The representative endpoints report only
+\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}, the accepted
+standard principles used by the chosen Lean/mathlib development. This audit does not
+mean that the code is constructive or computational: metric projection and several
+finite-dimensional choices are intentionally noncomputable. \ev{E23}
+
+\subsection{Verification itself had correction loops}
+
+The audit process was not exempt from failure. A task-level axiom check once ran in
+parallel before the new object files existed. The source-wide audit similarly raced
+the full build and initially reported a missing wavelet object file. Five temporary
+signal endpoint names were also misspelled in the first audit script. Sequential
+reruns with corrected names passed; no project theorem changed. \ev{E05}\ev{E23}\ev{E26}
+
+These incidents justify preserving commands and outputs rather than recording only
+``audit passed.'' They also show why verification evidence should be reproducible and
+why a failed audit command must be classified before it is interpreted as a failed
+theorem.
+
+The build-job count grew from 2,356 at the foundational specification to 2,960 at
+proof closure. The number is an environment-specific Lake build count, not a direct
+measure of project lines or theorem difficulty. Its historical value is that every
+closed task rechecked an expanding dependency graph rather than compiling only the
+new file. \ev{E02}\ev{E23}
+
+\section{The source audit as an independent closure gate}
+\label{sec:source-audit}
+
+The proof work initially relied on the distributed PDF, extracted text, rendered
+pages, and manual cross-checks. The owner later required a stronger gate: after proof
+expansion was judged complete, inspect the author-supplied LaTeX archive, reopen any
+affected proof, and only then write the two reports. Project control deliberately
+placed this gate after the last compact theorem task, so it would audit a stable
+claimed scope rather than a moving target. \ev{E22}\ev{E23}
+
+The archive audit recorded SHA-256 provenance, inventoried one TeX root and twelve
+figures, expanded source macros, compiled the article through three passes, and
+compared the resulting 60-page text with the distributed PDF. The body matched; the
+observed difference was the arXiv title-page stamp and induced layout. The
+source-to-Lean trace then classified claims through equation (210) as exact,
+conditional, constructively strengthened, represented, or outside scope. \ev{E23}
+
+Two findings required correction. A wavelet module header referred to Section 5
+instead of Section 3.2. The transmission-invariance boundaries around equations
+(158)--(173) were not collected in the obligation document. Both were documentation
+defects. No formula, theorem signature, or proof had to be reopened. \ev{E23}
+
+\begin{keyresult}[Meaning of the clean source audit]
+The audit supports the claim that the finished Lean endpoints have the stated
+relationship to the source. It does not claim line-by-line formalization of every
+citation, empirical assertion, or research direction in the paper
+\cite{nilsson2026}. A clean conformance result validates the declared boundary; it
+does not erase that boundary.
+\end{keyresult}
+
+The ordering matters historically. The source audit retrospectively confirmed that
+the early closure, polar, and Hilbert-space decisions were faithful. It cannot be
+used as evidence that no uncertainty existed while those decisions were first made.
+
+\section{What the session record reveals between commits}
+\label{sec:between-commits}
+
+The commit series contains one accepted state per task. The session trace reveals a
+different rhythm: propose a small term, compile, inspect the exact goal, patch, and
+compile again. High-risk analytic tasks were often developed in scratch files and
+moved only after the public names and proofs stabilized. \ev{E25}\ev{E26}
+
+\begin{longtable}{@{}L{37mm}C{18mm}L{91mm}@{}}
+\caption{Selected scratch histories preserved outside Git.}
+\label{tab:scratch-history}\\
+\toprule
+\textbf{Scratch path} & \textbf{Patches} & \textbf{What the trace adds to the final account} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Scratch path} & \textbf{Patches} & \textbf{What the trace adds to the final account} \\
+\midrule
+\endhead
+\path{/private/tmp/gram-proto.lean} & 12 &
+Shows the progression from unavailable sum lemmas and coercion failures to the
+explicit ordered-pair count that preserved \(k-1\). \\
+\path{/private/tmp/nnls-proto.lean} & 13 &
+Shows derivative-API attempts, the exact loss-increment pivot, KKT decomposition,
+and the later convergence layer before permanent modules were created. \\
+\artifact{ScratchT16.lean} & 6 &
+Shows the local Fejer/compactness construction used after strict contraction became
+mathematically impossible. \\
+\artifact{ScratchT17.lean} & 33 &
+Shows the entire exact-integration and \(L^2\) route, including unavailable library
+names, timeouts, Gram calculations, and final move to the wavelet module. \\
+\artifact{ScratchT18.lean} & 26 &
+Shows the abandoned elaboration-heavy route and the change to a general
+kernel-analysis operator plus simple-function density. \\
+\artifact{ScratchT20.lean} & 15 &
+Shows exact exponential-kernel integration, algebraic normalization failures, and
+the final Lipschitz remainder theorem. \\
+\artifact{ScratchT25.lean} & 9 &
+Shows why direct structure unfolding was replaced by literal finite-expectation
+goals for the product law. \\
+\bottomrule
+\end{longtable}
+
+The patch count is not a difficulty score. A long diff may be a mechanical rename;
+a one-line counterexample may force a new theorem architecture. The counts are useful
+only to refute the impression that the clean modules appeared in one pass and to
+locate where the dense proof search occurred.
+
+The trace also retains actions that Git intentionally omits: temporary axiom-audit
+files, theorem-name probes, failed builds, report renderings, and scratch cleanup. In
+that sense it is closer to a laboratory notebook than the commit graph. Unlike a
+laboratory notebook, it is machine-generated and exhaustive only for tool-mediated
+events. The human-readable session audit selects evidence without publishing raw
+operational content. \ev{E26}
+
+\section{Scale, speed, and what they do not prove}
+\label{sec:scale}
+
+At proof closure the Lean tree contained 31 module files under
+\artifact{IPNPCNS/}, 8,367 Lean lines including the root import module, 439 theorem or
+lemma declarations, and 172 definitions, structures, classes, or abbreviations. The
+Git series had 23 commits through source audit and 24 through the scientific report.
+The permanent mathematical modules ranged from 20 lines for a finite example wrapper
+to more than 1,000 lines for the exact wavelet development. \ev{E25}
+
+The elapsed commit window is striking. The first feasibility commit is timestamped
+17:31:59 local time, the source-audit commit 22:36:58, and the first report commit
+23:05:38, all on the same date. The live session itself began earlier at 15:10:21Z
+and continued through report production. \ev{E25}\ev{E26}
+
+Three cautions prevent this from becoming a misleading performance claim.
+
+\begin{enumerate}[label=\arabic*.]
+  \item Commit timestamps bound accepted repository states; they do not measure
+    uninterrupted active compute, equivalent human labor, or independent review.
+  \item The initial estimate concerned experienced human development and included a
+    broad uncertainty margin. It was not a benchmark prediction for an autonomous
+    agent operating in a pinned, cached environment.
+  \item The final scope is broad but disciplined. It does not formalize every cited
+    background theorem, generic stochastic learning, all convolution kernels, a full
+    intrinsic polyhedral-face theory, or empirical CNS adequacy.
+\end{enumerate}
+
+The honest conclusion is therefore not that formal mathematics has become
+instantaneous. It is that an autonomous agent can compress a large amount of
+repo-local formal proof work when the environment, task contracts, and feedback
+loops are favorable. The compression makes evidence discipline more important, not
+less: without the session trace, clean commits would conceal the dense search; without
+source and axiom audits, speed could be mistaken for assurance.
+
+\section{General lessons for interdisciplinary formalization}
+\label{sec:lessons}
+
+The project suggests several lessons that extend beyond this paper.
+
+\subsection{Formalize semantic operations before convenient representations}
+
+The coordinate-free cone and subspace layers survived every later extension.
+Pseudoinverse matrices, finite generators, and population circuits could be added as
+representation theorems. Starting from source notation alone would have coupled the
+core to missing library infrastructure. \ev{E02}\ev{E09}\ev{E15}
+
+\subsection{Treat quantifiers and closure as part of the result}
+
+Changing from arbitrary closed cones to finite polyhedral cones would have made some
+proofs easier but weakened the headline result. Omitting norm closure would have made
+several image arguments shorter but false as stated. These are not implementation
+details; they determine which theorem was verified. \ev{E02}\ev{E03}\ev{E11}
+
+\subsection{Separate exact mathematics, approximation, and empirical realization}
+
+Near-isometry implications, random embedding probabilities, learned population
+accuracy, and biological validity occupy different logical levels. The formalization
+benefited from different namespaces and interfaces for those levels. A conditional
+theorem can be strong and useful without converting its premise into an empirical
+fact. \ev{E04}\ev{E05}\ev{E23}
+
+\subsection{Let counterexamples shape the public API}
+
+The rank-deficient kernel obstruction forced prediction and coefficient uniqueness
+apart. Empty cones forced semantic theorems to carry nonemptiness hypotheses. The
+nonattainment of an infinite-dimensional infimum led to a lower-bound proof rather
+than selection of a minimizer. These are improvements in mathematical statement,
+not setbacks in implementation. \ev{E10}\ev{E12}\ev{E16}
+
+\subsection{Use interfaces as revisitable hypotheses}
+
+An interface should name the missing mathematical content narrowly enough that it
+can later be discharged or specialized. The membrane, exponential occupancy, and
+convolution interfaces passed this test. Equation (204) also passes it by remaining
+visible: the project can prove consequences without claiming a training theorem it
+does not possess. \ev{E05}\ev{E18}\ev{E20}\ev{E21}
+
+\subsection{Concrete witnesses can be more honest than generic abstractions}
+
+The Volterra theorem did not establish every square-integrable convolution claim.
+It established one nontrivial causal compact operator with explicit boundary
+semantics. The product occupancy theorem did not establish biological independence;
+it established the exact result for a chosen independent experiment. Such witnesses
+turn vague existence prose into auditable mathematics without overgeneralizing.
+\ev{E18}\ev{E22}
+
+\subsection{Proof logs and proof artifacts answer different questions}
+
+Git and compiled constants answer what survived. Session patches and diagnostics
+answer how the proof was found. Wotan and project control answer what the work was
+supposed to establish and why it changed direction. A credible history needs all
+three, with provenance labels that prevent one from impersonating another. \ev{E26}
+
+\subsection{Audit the source after the theorem set stabilizes, but before publication}
+
+An early source audit would have chased a moving coverage boundary. A post-publication
+audit would have been too late to correct theorem or report claims. The selected gate
+made every material source discrepancy capable of reopening proof work while keeping
+the traceability exercise finite. \ev{E22}\ev{E23}
+
+\subsection{Verification is layered assurance}
+
+Compilation, absence of admitted proofs, axiom inspection, theorem-signature review,
+source conformance, and visual report QA answer different questions. None subsumes
+the others. The project became more credible as these layers accumulated and their
+failures were themselves recorded. \ev{E23}\ev{E24}\ev{E26}
+
+\subsection{Autonomous speed increases the value of explicit control}
+
+When proof production is fast, scope can expand faster than reflective judgment. An
+obligation register, decision gates, and a rule for empty queues kept the work tied
+to source-shaped value. The mechanism did not make the decisions correct by fiat; it
+made their evidence and uncertainty inspectable.
+
+\section{Residual uncertainty and limits of this history}
+\label{sec:limits}
+
+The report is evidence-based, not omniscient.
+
+First, Wotan and project-control records are contemporaneous but self-authored. They
+summarize intent and interpretation; they are not independent observations. Git and
+compiler output corroborate implementation claims, while the source audit
+corroborates final conformance.
+
+Second, the session trace is unusually complete for tool-mediated editing. It does
+not record unexpressed cognition, and this report does not expose model-internal
+reasoning. The checksum fixes the prefix actually audited; later session events are
+outside that historical snapshot. \ev{E26}
+
+Third, the 38-endpoint axiom audit is a broad representative sample across all
+mathematical layers, not a printed list for all 439 theorem and lemma declarations.
+The repository-wide scan separately establishes the absence of admitted proofs,
+custom axioms, and unsafe declarations. The full build checks dependency closure.
+\ev{E23}
+
+Fourth, the source audit validates the project's claims about its theorem set. It
+does not formalize every cited result or resolve the deliberately open stochastic,
+generic analytic, intrinsic-face, network-stability, or empirical questions. The
+proof corpus should be described as a substantial verified mathematical layer, not
+as a complete formal theory of the central nervous system. \ev{E23}
+
+Finally, no independent external Lean reviewer or upstream mathlib maintainer is part
+of the recorded project. Kernel checking gives strong logical assurance; independent
+review could still improve names, abstractions, proof maintainability, and the
+scientific choice of interfaces.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The IPNPCNS formalization did not emerge by mechanically transcribing a paper. It
+emerged by exposing the commitments hidden in mathematical prose and allowing each
+one to meet a different kind of pressure: type theory, library availability,
+counterexample, analytic regularity, sampling semantics, biological uncertainty, or
+source conformance.
+
+The decisive moves were architectural. The Moreau pilot fixed a coordinate-free
+closed-cone core. Named interfaces kept underspecified learning and approximation
+claims honest. A kernel counterexample split full-rank and rank-deficient NNLS.
+Sufficient active certificates replaced an unavailable global face theory. An
+effective-map inverse supplied Moore--Penrose representation without a rank
+assumption. Exact Fourier work, finite-rank kernel approximation, Lipschitz analysis,
+and finite product experiments converted selected analytic and probabilistic
+interfaces into theorems.
+
+The historical record is as important as the sequence of successes. Git preserves
+the accepted checkpoints; Wotan and project control preserve scope and decisions;
+the full session trace preserves scratch code and compiler-guided search that the
+final tree intentionally omits. Their combination makes it possible to say not only
+that the development now builds, but how its verification boundary was discovered.
+
+The most general lesson is simple: a formalization is credible when its theorem
+contracts, failed routes, assumptions, trusted base, and source relationship are all
+visible. Autonomous proof production can be very fast. The evidentiary work that
+makes the result scientifically legible cannot be skipped.
+
+\clearpage
+\appendix
+
+\section{Chronological spine of accepted states}
+\label{app:chronology}
+
+The main report is organized by causal arcs. This appendix supplies the minimal
+chronological spine needed to date those arcs. Times are local commit times on
+3 August 2026. A row identifies an accepted Git state, not all work between states.
+
+\begin{longtable}{@{}C{13mm}L{17mm}L{39mm}L{72mm}@{}}
+\caption{Git checkpoints through the scientific report.}
+\label{tab:git-spine}\\
+\toprule
+\textbf{Time} & \textbf{Commit} & \textbf{Checkpoint} & \textbf{Historical role} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Time} & \textbf{Commit} & \textbf{Checkpoint} & \textbf{Historical role} \\
+\midrule
+\endhead
+17:31 & \commit{e291e52} & Feasibility &
+Paper inventory, Lean probe, empirical boundary, and four inactive continuation
+ideas. \\
+17:46 & \commit{eda50fa} & Specification &
+Pinned environment, closure and polar conventions, and exact pilot contract. \\
+17:53 & \commit{87b1d51} & Moreau pilot &
+Metric projection, Moreau decomposition, cone operations, and double rejection. \\
+18:10 & \commit{7a29065} & Intersection &
+Three rejection formulas and deterministic projection-error theorem. \\
+18:17 & \commit{f0db876} & Population boundary &
+Finite NNLS fixed points, explicit approximation interface, and conditional
+consequences. \\
+18:30 & \commit{084cf8f} & Approximation constants &
+Polarization and direct sparse Gram bound. \\
+18:38 & \commit{d5f9d34} & Active certificate &
+Finite sufficient active-face region and population constructor. \\
+19:00 & \commit{529e111} & NNLS optimality &
+Loss derivative, KKT/minimizer equivalence, and contraction-based convergence. \\
+19:18 & \commit{560c81e} & Subspaces &
+Intrinsic finite geometry, matrix range identity, and comparison measures. \\
+19:26 & \commit{48efc13} & Spectral NNLS &
+Full-rank contraction factor and rank-deficient obstruction. \\
+19:36 & \commit{10baf10} & Cone laws and circuits &
+Exact identities, reflection, primitive circuits, and conditional control. \\
+19:46 & \commit{d6f610a} & Cone comparison &
+Worst-case similarity, finite-frame proxy, and coverage error. \\
+19:56 & \commit{a7ecddb} & Occupancy &
+Exact one-message finite experiment and visible approximation boundaries. \\
+20:09 & \commit{b26dcec} & Signal semantics &
+Finite-window Bochner \(L^2\), bounded filters, dictionaries, and analytic
+interfaces. \\
+20:32 & \commit{764a00f} & Moore--Penrose &
+Effective-map inverse, Penrose equations, uniqueness, and projector renderings. \\
+20:42 & \commit{94c4bfa} & Rank-deficient NNLS &
+Fejer/compactness convergence to a selected minimizer. \\
+21:15 & \commit{af5d096} & Exact wavelets &
+Hann-window normalization, orthonormality, examples, and baseline convention. \\
+21:46 & \commit{08b72d3} & Compact Volterra filter &
+Causal realization, norm bound, finite-rank approximation, and compactness. \\
+21:54 & \commit{a0a608e} & Projection structure &
+Positive homogeneity and finite-span reduction. \\
+22:05 & \commit{3dd6ff9} & Membrane remainder &
+Exact low-pass step and Lipschitz quadratic error. \\
+22:15 & \commit{123d09a} & Occupancy approximation &
+Signed exponential comparison and explicit \(mp^2/n\) error. \\
+22:21 & \commit{367a1c8} & Product overlap &
+Independent two-message experiment and exact \(q^2/n\) expectation. \\
+22:36 & \commit{fd1361b} & Source audit &
+LaTeX conformance, traceability through equation (210), and final trust checks. \\
+23:05 & \commit{5a83b13} & Scientific report &
+Separate 24-page non-chronological mathematical account and PDF QA. \\
+\bottomrule
+\end{longtable}
+
+\section{Evidence ledger}
+\label{app:evidence-ledger}
+
+The entries below are intentionally compact. Full task evidence appears in
+\artifact{wotan/dev-log/}; steering context appears in
+\artifact{PROJECT-CONTROL.md}; source mapping appears in
+\artifact{SOURCE-AUDIT.md}; and the session extraction method appears in
+\artifact{reports/session-trace-audit.md}.
+
+\begin{description}[leftmargin=16mm,labelwidth=12mm,style=multiline]
+\evidenceitem{E01}{Contemporaneous feasibility report and task log,
+\path{LEAN-FEASIBILITY.md} and \path{wotan/dev-log/T-0001.md}, preserved by
+commit \commit{e291e52}. Supports the initial state, scope distinction, risk
+inventory, pilot choice, and human-effort forecast.}
+
+\evidenceitem{E02}{\artifact{FORMALIZATION-SPEC.md}, project-control records 001,
+and commit \commit{eda50fa}. Supports the pinned environment, closure and polar
+conventions, arbitrary-Hilbert-space target, and explicit non-goals.}
+
+\evidenceitem{E03}{Task log T-0003 and commit \commit{87b1d51}. Supports the Moreau
+API, pointwise-before-hull proof structure, network-cache recovery, and first
+assumption/axiom audit.}
+
+\evidenceitem{E04}{Task log T-0004, project-control reviews 002--003, and commit
+\commit{7a29065}. Supports the direct four-Moreau intersection architecture,
+heartbeat adjustment, deterministic near-isometry scope, and decomposition of
+independent endpoints.}
+
+\evidenceitem{E05}{Task log T-0005, \artifact{MODEL-OBLIGATIONS.md}, project-control
+review 004, and commit \commit{f0db876}. Supports separation of NNLS mathematics,
+population assumptions, stochastic claims, and empirical validity.}
+
+\evidenceitem{E06}{Task log T-0006 and commit \commit{084cf8f}. Supports the sharp
+polarization constant and the direct active quadratic-form proof of the sparse Gram
+bound.}
+
+\evidenceitem{E07}{Task log T-0007, project-control reviews 005--006, and commit
+\commit{d5f9d34}. Supports the sufficient KKT/Moreau active certificate, treatment of
+boundaries and the empty face, and the unclaimed intrinsic-face converse.}
+
+\evidenceitem{E08}{Task log T-0008, project-control reviews 006--007, and commit
+\commit{529e111}. Supports exact loss expansion, KKT/global-minimum equivalence,
+contraction-based convergence, and the early recognition of the rank-deficient
+boundary.}
+
+\evidenceitem{E09}{Task log T-0009, project-control reviews 007--008, and commit
+\commit{560c81e}. Supports dependency-led expansion, intrinsic subspace results, and
+deferral of the pseudoinverse representation layer.}
+
+\evidenceitem{E10}{Task log T-0010, project-control review 009, and commit
+\commit{48efc13}. Supports the full-rank contraction factor, common prediction, and
+the proved kernel obstruction to strict coefficient contraction.}
+
+\evidenceitem{E11}{Task log T-0011 and commit \commit{10baf10}. Supports exact cone
+laws, reflection and circuit rewrites, explicit control premises, and rejection of an
+invalid image-membership shortcut.}
+
+\evidenceitem{E12}{Task log T-0012 and commit \commit{d6f610a}. Supports explicit
+nonemptiness, nonattainment-safe infimum reasoning, optimistic finite proxies, and
+coverage-conditional error.}
+
+\evidenceitem{E13}{Task log T-0013, project-control reviews 011--012, and commit
+\commit{a7ecddb}. Supports the exact without-replacement/independent-between-axons
+experiment, boundary cases, and separate approximation interfaces.}
+
+\evidenceitem{E14}{Task log T-0014, project-control reviews 012--013, and commit
+\commit{b26dcec}. Supports finite-window Bochner \(L^2\), almost-everywhere semantics,
+closed image hulls, and the initial analytic interface boundary.}
+
+\evidenceitem{E15}{Task log T-0015, project-control reviews 013--014, and commit
+\commit{764a00f}. Supports the effective-map Moore--Penrose construction, all-rank
+scope, four Penrose equations, and dependent projector-equality issue.}
+
+\evidenceitem{E16}{Task log T-0016, project-control reviews 014--015, and commit
+\commit{94c4bfa}. Supports the rank-deficient Fejer, compactness, cluster-minimizer,
+and full-sequence convergence proof without a lower spectral bound.}
+
+\evidenceitem{E17}{Task log T-0017, project-control reviews 015--016, and commit
+\commit{af5d096}. Supports exact wavelet constants, local Fourier integration,
+orthonormality, example coefficients and residuals, and baseline convention.}
+
+\evidenceitem{E18}{Task log T-0018, project-control reviews 016--017, and commit
+\commit{08b72d3}. Supports the simple-function/rank-one compactness route, causal
+boundary choice, norm bound, and separation of alternative boundaries.}
+
+\evidenceitem{E19}{Task log T-0019, project-control reviews 017--018, and commit
+\commit{a0a608e}. Supports empty-queue selection, positive homogeneity, span
+reduction, unrestricted ambient Hilbert space, and dependent-instance rewrite repair.}
+
+\evidenceitem{E20}{Task log T-0020, project-control reviews 018--019, and commit
+\commit{3dd6ff9}. Supports the exact low-pass integral, Lipschitz premise, selected
+quadratic constant, and decision not to pursue the sharper half-factor.}
+
+\evidenceitem{E21}{Task log T-0021, project-control reviews 019--021, and commit
+\commit{123d09a}. Supports constructive discharge of the exponential occupancy error
+interface and separate invalid regimes.}
+
+\evidenceitem{E22}{Task log T-0025, project-control reviews 021--022, and commit
+\commit{367a1c8}. Supports the Cartesian-product two-message experiment, exact
+overlap expectation, and proof-phase closure decision.}
+
+\evidenceitem{E23}{\artifact{SOURCE-AUDIT.md}, task log T-0022, project-control
+reviews 022--023, and commit \commit{fd1361b}. Supports archive provenance, source
+build and comparison, equation-level traceability, documentation corrections, final
+2,960-job build, gap scan, and 38-endpoint axiom audit.}
+
+\evidenceitem{E24}{Task log T-0023, project-control review 024, and commit
+\commit{5a83b13}. Supports the separate scientific-report role, 24-page artifact,
+and render-correct QA loop.}
+
+\evidenceitem{E25}{Git log and current Lean-tree measurement. Supports the accepted
+checkpoint order and timestamps, 31 module files, 8,367 Lean lines, 439 theorem or
+lemma declarations, and 172 definition-like declarations. Timestamps do not measure
+human-equivalent effort.}
+
+\enlargethispage{2\baselineskip}
+\evidenceitem{E26}{\RaggedRight \artifact{reports/session-trace-audit.md} and the main Codex
+session prefix with SHA-256
+{\footnotesize\texttt{80e1b5977d4ff07fbfc696f319eb2a31}\allowbreak
+\texttt{db33d57636464e20b81d1063ba763ba5}}.
+Supports the scratch-file reconstruction, 427 successful patch events, 174 changes
+over 33 temporary or audit files, compiler-feedback chains, and report QA history.}
+\end{description}
+
+\clearpage
+\begin{thebibliography}{9}
+
+\bibitem{nilsson2026}
+M. N. P. Nilsson.
+\newblock Information processing by neuron populations in the central nervous
+system: A theory of the mathematical structure of data and operations.
+\newblock arXiv:2309.02332v3, 2026.
+
+\bibitem{moreau1962}
+J.-J. Moreau.
+\newblock Decomposition orthogonale d'un espace hilbertien selon deux cones
+mutuellement polaires.
+\newblock \emph{C. R. Acad. Sci. Paris}, 255:238--240, 1962.
+
+\bibitem{lawson1995}
+C. L. Lawson and R. J. Hanson.
+\newblock \emph{Solving Least Squares Problems}.
+\newblock SIAM, Philadelphia, 1995.
+
+\bibitem{bauschke2017}
+H. H. Bauschke and P. L. Combettes.
+\newblock \emph{Convex Analysis and Monotone Operator Theory in Hilbert Spaces}.
+\newblock Springer, second edition, 2017.
+
+\bibitem{demoura2015lean}
+L. de Moura, S. Kong, J. Avigad, F. van Doorn, and J. von Raumer.
+\newblock The Lean theorem prover (system description).
+\newblock In \emph{Automated Deduction -- CADE-25}, pages 378--388.
+Springer, 2015.
+
+\bibitem{mathlib2020}
+The mathlib Community.
+\newblock The Lean mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International Conference on
+Certified Programs and Proofs}, pages 367--381, 2020.
+
+\bibitem{lakatos1976}
+I. Lakatos.
+\newblock \emph{Proofs and Refutations: The Logic of Mathematical Discovery}.
+\newblock Cambridge University Press, 1976.
+
+\end{thebibliography}
+
+\end{document}
