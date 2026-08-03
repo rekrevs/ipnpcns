@@ -9,5 +9,7 @@ import IPNPCNS.Cone.Examples
 import IPNPCNS.Approx.Polarization
 import IPNPCNS.Approx.SparseGram
 import IPNPCNS.Learning.NNLS
+import IPNPCNS.Learning.NNLSOptimality
+import IPNPCNS.Learning.NNLSConvergence
 import IPNPCNS.Model.Population
 import IPNPCNS.Model.ActiveFace

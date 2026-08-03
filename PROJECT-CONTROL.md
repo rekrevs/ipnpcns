@@ -210,3 +210,46 @@
 - Revisit when:
   - T-0008 establishes the deterministic learning boundary.
   - The remaining paper-coverage queue needs to be expanded.
+
+## PCR-2026-08-03-007
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: direction-review
+- Trigger: T-0008 completed the finite deterministic NNLS layer and the prior Wotan
+  queue reached its final planned task.
+- Control judgement: continue, operate, evaluate
+- Current gate: Broad paper coverage now depends on the finite subspace/projector
+  layer that precedes both the cone generalization and the spectral learning results.
+- Recommendation: Execute T-0009 as the next foundation, followed by the finite Gram
+  step-size bridge in T-0010. Then close the remaining exact cone/circuit laws, cone
+  comparison bounds, sparsity calculation, and deterministic signal abstraction in
+  T-0011 through T-0014.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes continuous expansion
+  into necessary paper-coverage tasks.
+- Evidence:
+  - `IPNPCNS/Learning/NNLSOptimality.lean`
+  - `IPNPCNS/Learning/NNLSConvergence.lean`
+  - `LEAN-FEASIBILITY.md`
+  - `FORMALIZATION-SPEC.md`
+  - Section inventory from `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Moore–Penrose matrix identities may require a local finite pseudoinverse layer;
+    coordinate-free subspace theorems should be preserved even if that layer is
+    decomposed.
+  - Signal/filter results need theorem-by-theorem analytic hypotheses absent from the
+    prose and may terminate at an explicit conditional interface.
+  - Stochastic learning, random JL embeddings, and biological adequacy remain
+    intentionally outside deterministic proof claims unless fully specified.
+- Proposed actions:
+  - Formalize Section 2 subspace operations and projector comparisons in T-0009.
+  - Derive `BatchLinearContraction` from singular-value bounds in T-0010.
+  - Verify equations (93)–(97), (209), and the abstract conditional (210) in T-0011.
+  - Verify cone similarity/frame-proxy claims (87)–(92) in T-0012.
+  - Separate exact occupancy probability from the independence approximation in
+    equation (30) in T-0013.
+  - Build a precise deterministic signal/filter layer for Sections 3.1–3.3 in T-0014.
+- Revisit when:
+  - T-0009 determines the Moore–Penrose scope.
+  - T-0011 closes the remaining exact cone-algebra surface.
+  - T-0014 reaches an analytic or empirical specification boundary.

@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 9,
+  "next_id": 15,
   "tasks": [
     {
       "id": "T-0001",
@@ -61,12 +61,66 @@
     },
     {
       "id": "T-0008",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0007"
       ],
       "summary": "Prove finite NNLS optimality and deterministic convergence"
+    },
+    {
+      "id": "T-0009",
+      "status": "READY",
+      "size": "L",
+      "after": [
+        "T-0008"
+      ],
+      "summary": "Formalize finite subspace operations and projector comparisons"
+    },
+    {
+      "id": "T-0010",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0009"
+      ],
+      "summary": "Derive NNLS contraction from finite Gram spectral bounds"
+    },
+    {
+      "id": "T-0011",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0010"
+      ],
+      "summary": "Complete exact cone laws and primitive circuit rewrites"
+    },
+    {
+      "id": "T-0012",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0011"
+      ],
+      "summary": "Formalize cone similarity and finite-frame proxy bounds"
+    },
+    {
+      "id": "T-0013",
+      "status": "BLOCKED",
+      "size": "M",
+      "after": [
+        "T-0012"
+      ],
+      "summary": "Verify sparse collateral occupancy and overlap calculations"
+    },
+    {
+      "id": "T-0014",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0013"
+      ],
+      "summary": "Formalize the deterministic signal and filter abstraction"
     }
   ]
 }

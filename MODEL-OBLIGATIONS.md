@@ -5,16 +5,18 @@ They are not admitted as hidden axioms in the Lean development.
 
 ## NNLS and learning
 
-The finite batch objective, its stated gradient formula, nonnegative projected update,
-and fixed-point/complementarity equivalence are represented in
-`IPNPCNS/Learning/NNLS.lean`.
+The finite batch objective, gradient, nonnegative projected update, fixed-point
+equivalence, global KKT optimality, and deterministic convergence under an explicit
+spectral contraction are represented in `IPNPCNS/Learning/NNLS.lean`,
+`IPNPCNS/Learning/NNLSOptimality.lean`, and
+`IPNPCNS/Learning/NNLSConvergence.lean`.
 
 The following claims require separate theorem packages:
 
-- KKT necessity and sufficiency for the convex NNLS objective;
-- convergence of the deterministic projected-gradient iteration for
-  `0 < ε < 2 / ‖X‖²`;
-- uniqueness when the relevant design map has full rank;
+- derivation of the implemented strict contraction from singular-value bounds and a
+  familiar step interval such as `0 < ε < 2 / ‖X‖²` in the full-row-rank case;
+- a rank-deficient convergence theorem to the minimizer set rather than to a unique
+  coefficient vector;
 - stochastic projected-gradient convergence under a specified filtration, unbiased
   sampling law, moment bounds, and Robbins–Monro step-size conditions;
 - a steady-state tracking or misadjustment theorem for constant step size;
