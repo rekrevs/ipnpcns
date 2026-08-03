@@ -389,3 +389,40 @@
 - Revisit when:
   - T-0013 establishes the exact occupancy theorem and fixes the approximation
     interfaces.
+
+## PCR-2026-08-03-012
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0013 proved the exact finite occupancy formula (30), handled parameter
+  boundaries, and isolated both subsequent approximations.
+- Control judgement: continue, operate, preserve
+- Current gate: T-0014 must choose a precise finite-interval signal type and bounded
+  temporal-filter interface without overcommitting to an underspecified convolution
+  boundary convention or the informal `O(Δt²)` in equation (33).
+- Recommendation: Execute T-0014 next. Use Bochner `L²` on a finite interval for
+  scalar and finite-vector signals, lift finite spatial matrices pointwise, and state
+  temporal filters as bounded linear operators. Prove aggregation, linearity,
+  boundedness, cone-image, and finite-dictionary consequences. Preserve convolution,
+  compactness, Laplace-domain, and discretization claims behind explicit operator or
+  remainder hypotheses unless the paper supplies the missing regularity.
+- Owner decision required: none; this is the smallest faithful deterministic layer
+  and follows PCD-2026-08-03-001.
+- Evidence:
+  - `IPNPCNS/Probability/Occupancy.lean`
+  - `wotan/dev-log/T-0013.md`
+  - Sections 3.1--3.3 in `tmp/pdfs/paper.txt`
+- Uncertainty:
+  - Mathlib's Bochner-space notation and pointwise matrix lifting may require a
+    measurable-function representative rather than a simple function definition.
+  - Compactness of truncated convolution depends on the exact kernel extension and
+    integration domain; a bounded-operator interface is sufficient for the paper's
+    deterministic algebra.
+- Proposed actions:
+  - Execute T-0014 with visible measure, boundedness, and remainder premises.
+  - Preserve exact wavelet examples and convolution compactness as follow-on tasks if
+    they become separable after the core signal layer.
+- Revisit when:
+  - T-0014 establishes the signal/filter boundary and determines any justified
+    follow-on tasks.

@@ -21,3 +21,4 @@ import IPNPCNS.Learning.NNLSSpectral
 import IPNPCNS.Model.Population
 import IPNPCNS.Model.ActiveFace
 import IPNPCNS.Model.Circuits
+import IPNPCNS.Probability.Occupancy
