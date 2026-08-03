@@ -47,17 +47,20 @@ separate exact example; they are not needed for the abstract deterministic layer
 ## NNLS and learning
 
 The finite batch objective, gradient, nonnegative projected update, fixed-point
-equivalence, global KKT optimality, and deterministic convergence under an explicit
-spectral contraction are represented in `IPNPCNS/Learning/NNLS.lean`,
-`IPNPCNS/Learning/NNLSOptimality.lean`, and
-`IPNPCNS/Learning/NNLSConvergence.lean`.
+equivalence, global KKT optimality, and deterministic convergence are represented in
+`IPNPCNS/Learning/NNLS.lean`, `IPNPCNS/Learning/NNLSOptimality.lean`,
+`IPNPCNS/Learning/NNLSConvergence.lean`, `IPNPCNS/Learning/NNLSSpectral.lean`, and
+`IPNPCNS/Learning/NNLSRankDeficient.lean`.
+
+The rank-deficient theorem assumes only a positive upper spectral bound, the open
+step interval `0 < ε < 2 / L`, and a nonempty NNLS solution set. It proves Fejér
+descent, vanishing prediction error, finite-dimensional convergence to a selected
+coefficient minimizer, asymptotic regularity, and equality of all minimizer
+predictions. Coefficient uniqueness remains conditional on injectivity of the
+prediction map; it is not inferred in kernel directions.
 
 The following claims require separate theorem packages:
 
-- a rank-deficient convergence theorem to the minimizer set rather than to a unique
-  coefficient vector (scheduled as T-0016); strict coefficient contraction and
-  full-row-rank convergence for `0 < ε < 2 / L` are proved in
-  `IPNPCNS/Learning/NNLSSpectral.lean`;
 - stochastic projected-gradient convergence under a specified filtration, unbiased
   sampling law, moment bounds, and Robbins–Monro step-size conditions;
 - a steady-state tracking or misadjustment theorem for constant step size;

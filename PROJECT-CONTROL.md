@@ -500,3 +500,41 @@
 - Revisit when:
   - T-0016 establishes convergence to a selected minimizer or exposes a genuinely
     missing compactness lemma.
+
+## PCR-2026-08-03-015
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0016 established rank-deficient projected NNLS convergence under an
+  upper spectral bound and `0 < ε < 2/L`, including asymptotic regularity and a
+  selected coefficient minimizer.
+- Control judgement: continue, operate, preserve
+- Current gate: The deterministic learning chain is closed. T-0017 is now the next
+  approved gap: the abstract finite dictionary interface from T-0014 should be tied
+  to the paper's concrete finite Hann-window wavelet construction.
+- Recommendation: Execute T-0017 next. Isolate the exact discrete indexing,
+  normalization, and boundary convention before proving orthogonality. Prefer a
+  finite algebraic statement faithful to the paper over importing an unjustified
+  continuous-wavelet interpretation. Keep T-0018 queued after T-0017 for the concrete
+  compact convolution operator.
+- Owner decision required: none; T-0017 and T-0018 were already approved by
+  PCR-2026-08-03-013.
+- Evidence:
+  - `IPNPCNS/Learning/NNLSRankDeficient.lean`
+  - `IPNPCNS/Learning/NNLSSpectral.lean`
+  - `wotan/dev-log/T-0016.md`
+  - `MODEL-OBLIGATIONS.md`
+- Uncertainty:
+  - The paper's exact Hann discretization may contain an implicit endpoint or
+    indexing convention that must be made explicit.
+  - A literal trigonometric orthogonality proof may require finite Fourier identities
+    not already packaged in the repository.
+- Proposed actions:
+  - Close T-0016 after the full build and axiom audit.
+  - Execute T-0017 and record any convention-sensitive claim as an explicit theorem
+    premise or corrected finite formula.
+  - Continue to T-0018 once the dictionary boundary is stable.
+- Revisit when:
+  - T-0017 has either verified the exact finite dictionary or identified a concrete
+    counterexample in the paper's stated convention.
