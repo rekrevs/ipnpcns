@@ -29,11 +29,14 @@ The phrase “under standard assumptions” is a research pointer, not a proposi
 `projection_eq_face` field isolates equation (199), while `Approximation204`
 isolates the learned approximation assumption in equation (204).
 
-A more constructive account still requires:
+A constructive sufficient active-region account is now provided in
+`IPNPCNS/Model/ActiveFace.lean`. It proves equation (199) from a finite-generator
+KKT/Moreau certificate and handles the empty face and overlapping boundary
+certificates. A more intrinsic or empirical account still requires:
 
 - polyhedral faces and relative interiors for finitely generated cones;
-- a proof that cone projection equals projection onto the active face span throughout
-  the stated region;
+- a necessity theorem identifying the certificate region with an intrinsic
+  relative-interior face partition;
 - a model connecting threshold dynamics and support masks to face-region selection;
 - training-data and adaptation hypotheses that imply a numerical value of `ε`.
 

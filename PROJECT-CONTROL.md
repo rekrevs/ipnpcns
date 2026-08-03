@@ -174,3 +174,39 @@
 - Revisit when:
   - T-0007 yields a constructive equation (199).
   - Degenerate active sets expose a scope mismatch that affects the population model.
+
+## PCR-2026-08-03-006
+
+- Record type: review
+- Date: 2026-08-03
+- Mode: checkpoint
+- Trigger: T-0007 replaced conditional equation (199) with a finite active-face
+  certificate and resolved zero-face and boundary behavior.
+- Control judgement: continue, operate
+- Current gate: The finite NNLS layer still identifies fixed points with
+  complementarity but does not connect those points to global minimizers or a
+  deterministic iteration theorem.
+- Recommendation: Execute T-0008 next. Prove algebraic gradient correctness and
+  complementarity/minimizer equivalence first; select the strongest bounded
+  deterministic convergence endpoint supported by mathlib and explicit spectral or
+  contraction hypotheses.
+- Owner decision required: none; PCD-2026-08-03-001 authorizes continuation.
+- Evidence:
+  - `IPNPCNS/Model/ActiveFace.lean`
+  - `IPNPCNS/Model/Population.lean`
+  - `wotan/dev-log/T-0007.md`
+- Uncertainty:
+  - An intrinsic polyhedral relative-interior partition remains outside the available
+    API, but it is not required for the verified sufficient projection regions.
+  - A general projected-gradient convergence development may be disproportionate to
+    the paper's underspecified learning statement; a finite quadratic contraction
+    theorem may be the appropriate verified endpoint.
+- Proposed actions:
+  - Prove the finite quadratic loss-difference and gradient identities.
+  - Derive global optimality from complementarity and the positive-semidefinite Gram
+    remainder, including the converse through feasible coordinate perturbations.
+  - Formalize deterministic convergence only under a theorem signature strong enough
+    to make every stability premise visible.
+- Revisit when:
+  - T-0008 establishes the deterministic learning boundary.
+  - The remaining paper-coverage queue needs to be expanded.
