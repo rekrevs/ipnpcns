@@ -16,7 +16,10 @@
   "readme": "README.md",
   "verification_commands": [
     "lake build",
-    "python /path/to/formalize-math-paper/scripts/check_project.py . --stage publication"
+    "python ~/.codex/skills/formalize-math-paper/scripts/check_project.py . --stage publication"
   ],
-  "artifact_sha256": {}
+  "artifact_sha256": {
+    "output/pdf/ipnpcns-scientific-formalization-report.pdf": "639ba43dc300832a39e1cb64e0de5c6eaacaa81b906270f05b2e71a0ce01b858",
+    "output/pdf/ipnpcns-formalization-process-history.pdf": "4360b03adada529c34ef2874ac69a41e4607c64db525c72b899676f7aaa02b04"
+  }
 }
