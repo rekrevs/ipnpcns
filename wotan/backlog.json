@@ -234,7 +234,7 @@
     },
     {
       "id": "T-0027",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0026"
@@ -243,12 +243,11 @@
     },
     {
       "id": "T-0028",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "size": "M",
       "after": [
         "T-0027"
       ],
-      "blocker": "Waiting for both revised report artifacts.",
       "summary": "Publish and verify the revised report set"
     }
   ]

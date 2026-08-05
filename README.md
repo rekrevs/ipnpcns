@@ -16,8 +16,8 @@ The two reports are the best entry points to the project:
 
 | Report | Focus | PDF | LaTeX source |
 |---|---|---|---|
-| **Scientific formalization report** | A self-contained account of the mathematics, the verified results, the trust boundary, and the remaining model obligations. Written for mathematically mature readers; no Lean expertise is assumed. | **[Read the PDF](output/pdf/ipnpcns-scientific-formalization-report.pdf)** | [Source](reports/scientific-formalization-report.tex) |
-| **Formalization process history** | An evidence-based reconstruction of how the definitions, proof architecture, failures, audits, and final verification were developed. | **[Read the PDF](output/pdf/ipnpcns-formalization-process-history.pdf)** | [Source](reports/formalization-process-history.tex) |
+| **Scientific formalization report** | A self-contained account of the mathematics, verified results, paper-to-Lean translation, source provenance, trust boundary, and remaining model obligations. It teaches the Lean concepts needed to inspect a representative theorem without assuming prior Lean knowledge. | **[Read the PDF](output/pdf/ipnpcns-scientific-formalization-report.pdf)** | [Source](reports/scientific-formalization-report.tex) |
+| **Formalization process history** | An evidence-based reconstruction of how the definitions, proof architecture, failures, audits, and final verification were developed. It defines the agent environment, Wotan, Project Control, and every evidence class it uses. | **[Read the PDF](output/pdf/ipnpcns-formalization-process-history.pdf)** | [Source](reports/formalization-process-history.tex) |
 
 The scientific report should be read first for the result itself. The process
 history is complementary: it explains how the result was reached and what the
@@ -66,9 +66,11 @@ with the author-supplied source archive.
 | [`IPNPCNS/`](IPNPCNS/) | Lean modules, organized by mathematical layer |
 | [`IPNPCNS.lean`](IPNPCNS.lean) | Root import for the verified corpus |
 | [`FORMALIZATION-SPEC.md`](FORMALIZATION-SPEC.md) | Formal scope, conventions, and acceptance criteria |
+| [`FORMALIZATION-CLAIMS.md`](FORMALIZATION-CLAIMS.md) | Compact claim ledger separating paper content from formalization additions |
 | [`LEAN-FEASIBILITY.md`](LEAN-FEASIBILITY.md) | Initial feasibility assessment and formalization strategy |
 | [`MODEL-OBLIGATIONS.md`](MODEL-OBLIGATIONS.md) | Explicit assumptions, exclusions, and empirical obligations |
 | [`SOURCE-AUDIT.md`](SOURCE-AUDIT.md) | Audit against the supplied LaTeX source and distributed paper |
+| [`formalization-project.json`](formalization-project.json) | Machine-readable paths, verification commands, and release artifact hashes |
 | [`reports/`](reports/) | English LaTeX sources and report evidence records |
 | [`output/pdf/`](output/pdf/) | Publication-ready report PDFs |
 | [`wotan/`](wotan/) | Structured task ledger and development logs |

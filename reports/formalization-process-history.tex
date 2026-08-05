@@ -80,8 +80,9 @@
       How a 60-page interdisciplinary paper became a layered Lean development,
       and how proof failures, specification boundaries, and audits shaped the result \\
     \textbf{Primary record} &
-      Wotan task logs, project-control decisions, Git states, compiler and build
-      output, source audit, and a checksum-bounded Codex session trace \\
+      Versioned task logs (Wotan), steering decisions (Project Control), Git
+      states, compiler and build output, source audit, and a checksum-bounded
+      Codex session trace \\
     \textbf{Final proof corpus} &
       31 Lean modules, 8,367 lines, 439 theorem or lemma declarations, and no
       admitted proofs or project-specific axioms \\
@@ -113,13 +114,15 @@ missing infrastructure, counterexamples, and proof obligations; the resulting
 contract was either proved, split, specialized, or retained as a visible premise.
 
 The history is unusually well documented. Git preserves 24 curated checkpoints
-through the first report. Wotan logs and project-control records preserve declared
-scope and steering decisions. A 50 MB, checksum-bounded Codex session prefix also
-preserves the dense work between commits: full additions and diffs for discarded
-scratch proofs, compiler diagnostics, theorem-name probes, and migrations into the
-permanent modules. This record permits a distinction between ordinary elaboration
-failures, genuine mathematical obstructions, architectural changes of proof, and
-late verification or typesetting corrections.
+through the first report. Wotan---a repository-local task queue with one evidence
+log per task---preserves declared proof contracts and completion evidence. Project
+Control---a separate ledger of evidence-based steering reviews and owner
+decisions---preserves why scope changed. A 50 MB, checksum-bounded Codex session
+prefix also preserves the dense work between commits: full additions and diffs for
+discarded scratch proofs, compiler diagnostics, theorem-name probes, and migrations
+into the permanent modules. This record permits a distinction between ordinary
+elaboration failures, genuine mathematical obstructions, architectural changes of
+proof, and late verification or typesetting corrections.
 
 Several episodes were decisive. A coordinate-free Moreau/double-rejection pilot
 validated the general Hilbert-space architecture. Rank deficiency disproved strict
@@ -227,6 +230,109 @@ that should be redesigned. A nonzero kernel vector fixed by an iteration is a
 mathematical counterexample to strict contraction. The history becomes informative
 only when these are separated.
 
+\section{Actors, tools, and records}
+\label{sec:environment}
+
+The names used in this history describe a small project environment, not knowledge
+the reader is expected to bring. The environment had one human owner, one continuing
+AI-agent task, one Git repository, a pinned Lean toolchain, and two lightweight
+repository-local control mechanisms. None of the control mechanisms participates in
+Lean's logical trust chain.
+
+\subsection{The actors and the workspace}
+
+The \emph{owner} supplied the paper, set the scientific and publication goals,
+authorized continuous autonomous execution, resolved matters of scope and external
+publication, and challenged an early claim about missing historical evidence. The
+\emph{agent} was Codex, an AI system operating through a continuing task. It could
+read and patch files, run shell commands, compile Lean and LaTeX, inspect rendered
+pages, and use Git and GitHub under the owner's authorization.
+
+The \emph{repository} was the ordinary filesystem directory containing the paper and,
+eventually, all Lean source, reports, evidence records, and Git metadata. Git stored
+content-addressed snapshots called commits. A clean commit is therefore evidence of
+an accepted file state and its relationship to earlier states; it is not a record of
+every attempt made before that state was accepted.
+
+The phrase \emph{session trace} refers to the JSON Lines event log written by Codex
+under the user's home directory, conventionally abbreviated \artifact{~/.codex/}.
+Each line records an observable event such as a message, command, patch, or tool
+result. The raw trace remained private and outside Git. A repository document records
+the hash and cutoff of the prefix used here, so the historical sample is reproducible
+without publishing the entire operational log.
+
+\subsection{The formal verification toolchain}
+
+\emph{Lean} is an interactive theorem prover. Mathematical definitions and theorem
+statements are written in Lean source files; tactics construct proof terms; a small
+kernel checks the fully elaborated terms. \emph{mathlib} is the imported,
+machine-checked mathematical library providing such foundations as Hilbert spaces,
+convexity, matrices, measure theory, and finite combinatorics. \emph{Lake} is Lean's
+project and build tool: it resolves the pinned dependency graph and asks Lean to
+check the modules.
+
+These roles matter historically. A compiler diagnostic can refute one attempted
+term or reveal a missing library interface. A successful clean Lake build establishes
+that the accepted modules elaborate and kernel-check together. Neither result alone
+shows that the theorem statement faithfully represents the paper. That separate
+question is addressed by the source audit.
+
+\subsection{Wotan and Project Control}
+
+\emph{Wotan} was the execution ledger. Its machine-readable file
+\artifact{wotan/backlog.json} stored task identifiers, state, size, and dependencies.
+For each task, \artifact{wotan/dev-log/T-NNNN.md} recorded the mathematical context,
+acceptance criteria, planned verification, implementation notes, obstacles, evidence,
+and outcome. Only one task was active at a time. A task could not be called complete
+until its status, evidence log, and Git commit agreed.
+
+\emph{Project Control} was the steering ledger, stored in
+\artifact{PROJECT-CONTROL.md}. It was invoked at scientific gates, after major
+results or falsifications, and when the executable queue became empty. A review
+compared the current objective, evidence, assumptions, uncertainty, and remaining
+value, then recommended continuing, redirecting, evaluating, preserving, waiting,
+or stopping. Decisions requiring authority were recorded separately as owner
+decisions and only then translated into Wotan tasks.
+
+The division can be summarized as follows:
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{@{}L{31mm}L{39mm}Y@{}}
+\toprule
+\textbf{Mechanism} & \textbf{Question answered} & \textbf{What it cannot establish} \\
+\midrule
+Wotan & What concrete work is ready, active, blocked, or complete, and what
+evidence closes it? & Whether the overall scientific direction is still the best
+use of effort \\
+Project Control & Given current evidence and uncertainty, should scope continue,
+change, close, or await an owner decision? & The truth of a Lean theorem or the
+empirical adequacy of the CNS model \\
+Lean kernel & Does the elaborated proof term have the exact theorem type under the
+recorded assumptions? & Whether the formal contract is the intended reading of the
+paper \\
+Source audit & Does the formal contract agree with the identified PDF and LaTeX
+source? & Whether biological systems satisfy the model assumptions \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Wotan and Project Control are project-specific names for transparent files and
+rules, not external databases or invisible services. A reader needs no installation
+of either system: the relevant records are ordinary versioned JSON and Markdown.
+Later sections ask what these mechanisms contributed to the result, but their
+definitions and evidentiary limits are fixed here.
+
+\subsection{How to read the evidence citations}
+
+Blue bracketed identifiers such as \ev{E01} refer to the evidence ledger in
+\cref{app:evidence-ledger}. The ledger points to task logs, decisions, commits,
+audits, build records, and the bounded session trace. Files shown with a typewriter
+face are repository paths; a leading \artifact{~/} means the user's home directory.
+Commit identifiers denote Git snapshots. The terms \emph{contemporaneous} and
+\emph{retrospective} distinguish evidence recorded during proof work from later
+analysis of the completed corpus.
+
 \section{Evidence and reconstruction}
 \label{sec:evidence}
 
@@ -291,7 +397,7 @@ turning a private operational log into an indiscriminate appendix.
 \end{evidencebox}
 
 This evidence does not make Git redundant. The trace shows what was tried; Git shows
-what was accepted. Wotan explains the intended contract; project control explains
+what was accepted. Wotan explains the intended contract; Project Control explains
 why work changed direction. A compiler error proves only that one intermediate term
 failed. A later successful build and axiom audit establish the status of the accepted
 endpoint.
@@ -650,7 +756,7 @@ The subspace task proved the coordinate-free content of equations (12)--(23), th
 range identity \(\Col(AA^\mathsf{T})=\Col(A)\), comparison formulas, and a concrete
 failure of distributivity. Mathlib lacked the general Moore--Penrose API needed for
 the paper's \(AA^+\) notation. Because none of those intrinsic results depended on
-that notation, project control preserved the gap as a later task rather than blocking
+that notation, Project Control preserved the gap as a later task rather than blocking
 the geometry. \ev{E09}
 
 This split prevented two common distortions. The project did not assume a
@@ -902,7 +1008,7 @@ theorem could be instantiated. \ev{E26}
 \section{Steering as part of the proof method}
 \label{sec:steering}
 
-Wotan and project control are subjects of this report because they influenced which
+Wotan and Project Control are subjects of this report because they influenced which
 mathematics was attempted. They are not presented as scientific evidence for the
 theorems themselves. Lean's kernel and the audited source tree play that role.
 
@@ -911,7 +1017,7 @@ theorems themselves. Lean's kernel and the audited source tree play that role.
 Each task combined a claim-oriented context, acceptance criteria, hard verification
 endpoints, manual checks, risks, an approach, implementation notes, obstacles,
 evidence, and an outcome. The initial continuations were stored as inactive ideas.
-After the owner authorized continuous autonomous work, project control promoted them
+After the owner authorized continuous autonomous work, Project Control promoted them
 into an executable queue and permitted creation of follow-on tasks. \ev{E01}\ev{E02}
 
 This mattered most at boundaries. The sparse Gram proof was split from the already
@@ -927,7 +1033,7 @@ stochastic assumptions were absent does not silently disappear; it remains in
 for interdisciplinary work, where an omitted empirical bridge can otherwise be
 mistaken for a proved consequence.
 
-\subsection{What project control contributed}
+\subsection{What Project Control contributed}
 
 Project-control reviews occurred at scientific gates and whenever the actionable
 queue became empty. Each review recorded the current evidence, uncertainty, selected
@@ -1211,7 +1317,7 @@ turn vague existence prose into auditable mathematics without overgeneralizing.
 \subsection{Proof logs and proof artifacts answer different questions}
 
 Git and compiled constants answer what survived. Session patches and diagnostics
-answer how the proof was found. Wotan and project control answer what the work was
+answer how the proof was found. Wotan and Project Control answer what the work was
 supposed to establish and why it changed direction. A credible history needs all
 three, with provenance labels that prevent one from impersonating another. \ev{E26}
 
@@ -1241,7 +1347,7 @@ made their evidence and uncertainty inspectable.
 
 The report is evidence-based, not omniscient.
 
-First, Wotan and project-control records are contemporaneous but self-authored. They
+First, Wotan and Project Control records are contemporaneous but self-authored. They
 summarize intent and interpretation; they are not independent observations. Git and
 compiler output corroborate implementation claims, while the source audit
 corroborates final conformance.
@@ -1287,7 +1393,7 @@ and finite product experiments converted selected analytic and probabilistic
 interfaces into theorems.
 
 The historical record is as important as the sequence of successes. Git preserves
-the accepted checkpoints; Wotan and project control preserve scope and decisions;
+the accepted checkpoints; Wotan and Project Control preserve scope and decisions;
 the full session trace preserves scratch code and compiler-guided search that the
 final tree intentionally omits. Their combination makes it possible to say not only
 that the development now builds, but how its verification boundary was discovered.
@@ -1387,7 +1493,7 @@ The entries below are intentionally compact. Full task evidence appears in
 commit \commit{e291e52}. Supports the initial state, scope distinction, risk
 inventory, pilot choice, and human-effort forecast.}
 
-\evidenceitem{E02}{\artifact{FORMALIZATION-SPEC.md}, project-control records 001,
+\evidenceitem{E02}{\artifact{FORMALIZATION-SPEC.md}, Project Control records 001,
 and commit \commit{eda50fa}. Supports the pinned environment, closure and polar
 conventions, arbitrary-Hilbert-space target, and explicit non-goals.}
 
@@ -1395,12 +1501,12 @@ conventions, arbitrary-Hilbert-space target, and explicit non-goals.}
 API, pointwise-before-hull proof structure, network-cache recovery, and first
 assumption/axiom audit.}
 
-\evidenceitem{E04}{Task log T-0004, project-control reviews 002--003, and commit
+\evidenceitem{E04}{Task log T-0004, Project Control reviews 002--003, and commit
 \commit{7a29065}. Supports the direct four-Moreau intersection architecture,
 heartbeat adjustment, deterministic near-isometry scope, and decomposition of
 independent endpoints.}
 
-\evidenceitem{E05}{Task log T-0005, \artifact{MODEL-OBLIGATIONS.md}, project-control
+\evidenceitem{E05}{Task log T-0005, \artifact{MODEL-OBLIGATIONS.md}, Project Control
 review 004, and commit \commit{f0db876}. Supports separation of NNLS mathematics,
 population assumptions, stochastic claims, and empirical validity.}
 
@@ -1408,20 +1514,20 @@ population assumptions, stochastic claims, and empirical validity.}
 polarization constant and the direct active quadratic-form proof of the sparse Gram
 bound.}
 
-\evidenceitem{E07}{Task log T-0007, project-control reviews 005--006, and commit
+\evidenceitem{E07}{Task log T-0007, Project Control reviews 005--006, and commit
 \commit{d5f9d34}. Supports the sufficient KKT/Moreau active certificate, treatment of
 boundaries and the empty face, and the unclaimed intrinsic-face converse.}
 
-\evidenceitem{E08}{Task log T-0008, project-control reviews 006--007, and commit
+\evidenceitem{E08}{Task log T-0008, Project Control reviews 006--007, and commit
 \commit{529e111}. Supports exact loss expansion, KKT/global-minimum equivalence,
 contraction-based convergence, and the early recognition of the rank-deficient
 boundary.}
 
-\evidenceitem{E09}{Task log T-0009, project-control reviews 007--008, and commit
+\evidenceitem{E09}{Task log T-0009, Project Control reviews 007--008, and commit
 \commit{560c81e}. Supports dependency-led expansion, intrinsic subspace results, and
 deferral of the pseudoinverse representation layer.}
 
-\evidenceitem{E10}{Task log T-0010, project-control review 009, and commit
+\evidenceitem{E10}{Task log T-0010, Project Control review 009, and commit
 \commit{48efc13}. Supports the full-rank contraction factor, common prediction, and
 the proved kernel obstruction to strict coefficient contraction.}
 
@@ -1433,52 +1539,52 @@ invalid image-membership shortcut.}
 nonemptiness, nonattainment-safe infimum reasoning, optimistic finite proxies, and
 coverage-conditional error.}
 
-\evidenceitem{E13}{Task log T-0013, project-control reviews 011--012, and commit
+\evidenceitem{E13}{Task log T-0013, Project Control reviews 011--012, and commit
 \commit{a7ecddb}. Supports the exact without-replacement/independent-between-axons
 experiment, boundary cases, and separate approximation interfaces.}
 
-\evidenceitem{E14}{Task log T-0014, project-control reviews 012--013, and commit
+\evidenceitem{E14}{Task log T-0014, Project Control reviews 012--013, and commit
 \commit{b26dcec}. Supports finite-window Bochner \(L^2\), almost-everywhere semantics,
 closed image hulls, and the initial analytic interface boundary.}
 
-\evidenceitem{E15}{Task log T-0015, project-control reviews 013--014, and commit
+\evidenceitem{E15}{Task log T-0015, Project Control reviews 013--014, and commit
 \commit{764a00f}. Supports the effective-map Moore--Penrose construction, all-rank
 scope, four Penrose equations, and dependent projector-equality issue.}
 
-\evidenceitem{E16}{Task log T-0016, project-control reviews 014--015, and commit
+\evidenceitem{E16}{Task log T-0016, Project Control reviews 014--015, and commit
 \commit{94c4bfa}. Supports the rank-deficient Fejer, compactness, cluster-minimizer,
 and full-sequence convergence proof without a lower spectral bound.}
 
-\evidenceitem{E17}{Task log T-0017, project-control reviews 015--016, and commit
+\evidenceitem{E17}{Task log T-0017, Project Control reviews 015--016, and commit
 \commit{af5d096}. Supports exact wavelet constants, local Fourier integration,
 orthonormality, example coefficients and residuals, and baseline convention.}
 
-\evidenceitem{E18}{Task log T-0018, project-control reviews 016--017, and commit
+\evidenceitem{E18}{Task log T-0018, Project Control reviews 016--017, and commit
 \commit{08b72d3}. Supports the simple-function/rank-one compactness route, causal
 boundary choice, norm bound, and separation of alternative boundaries.}
 
-\evidenceitem{E19}{Task log T-0019, project-control reviews 017--018, and commit
+\evidenceitem{E19}{Task log T-0019, Project Control reviews 017--018, and commit
 \commit{a0a608e}. Supports empty-queue selection, positive homogeneity, span
 reduction, unrestricted ambient Hilbert space, and dependent-instance rewrite repair.}
 
-\evidenceitem{E20}{Task log T-0020, project-control reviews 018--019, and commit
+\evidenceitem{E20}{Task log T-0020, Project Control reviews 018--019, and commit
 \commit{3dd6ff9}. Supports the exact low-pass integral, Lipschitz premise, selected
 quadratic constant, and decision not to pursue the sharper half-factor.}
 
-\evidenceitem{E21}{Task log T-0021, project-control reviews 019--021, and commit
+\evidenceitem{E21}{Task log T-0021, Project Control reviews 019--021, and commit
 \commit{123d09a}. Supports constructive discharge of the exponential occupancy error
 interface and separate invalid regimes.}
 
-\evidenceitem{E22}{Task log T-0025, project-control reviews 021--022, and commit
+\evidenceitem{E22}{Task log T-0025, Project Control reviews 021--022, and commit
 \commit{367a1c8}. Supports the Cartesian-product two-message experiment, exact
 overlap expectation, and proof-phase closure decision.}
 
-\evidenceitem{E23}{\artifact{SOURCE-AUDIT.md}, task log T-0022, project-control
+\evidenceitem{E23}{\artifact{SOURCE-AUDIT.md}, task log T-0022, Project Control
 reviews 022--023, and commit \commit{fd1361b}. Supports archive provenance, source
 build and comparison, equation-level traceability, documentation corrections, final
 2,960-job build, gap scan, and 38-endpoint axiom audit.}
 
-\evidenceitem{E24}{Task log T-0023, project-control review 024, and commit
+\evidenceitem{E24}{Task log T-0023, Project Control review 024, and commit
 \commit{5a83b13}. Supports the separate scientific-report role, 24-page artifact,
 and render-correct QA loop.}
 
