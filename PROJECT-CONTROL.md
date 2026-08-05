@@ -1079,3 +1079,35 @@
 - Revisit when:
   - T-0028 completes the revised report publication gate.
   - Independent review later identifies another mathematical, source, or audience defect.
+
+## PCR-2026-08-05-002
+
+- Record type: review
+- Date: 2026-08-05
+- Mode: completion-review
+- Trigger: T-0028 completed the report revision and publication gate requested by
+  `PCR-2026-08-05-001`.
+- Control judgement: preserve, stop
+- Current gate: Both reports satisfy their revised audience contracts, the Lean
+  corpus still builds, the source audit remains valid, the release manifest passes,
+  every final PDF page has been visually inspected, and GitHub `main` contains the
+  verified README and artifacts.
+- Recommendation: Preserve the published state and stop report expansion. Reopen
+  only for a new mathematical result, source finding, independent review defect, or
+  owner-requested audience change.
+- Evidence:
+  - `wotan/dev-log/T-0026.md`
+  - `wotan/dev-log/T-0027.md`
+  - `wotan/dev-log/T-0028.md`
+  - `FORMALIZATION-CLAIMS.md`
+  - `formalization-project.json`
+  - GitHub `main` at `bad957cd7c35c668d337e0f67b53b3a0a18261d2`
+- Uncertainty:
+  - No independent external cold-reader review has been performed.
+  - PDF byte reproduction retains a pdfTeX trailer-identifier variation, although
+    fixed-date builds have identical metadata, extracted content, and rasterized
+    pages.
+- Revisit when:
+  - Independent review identifies a theorem, provenance, source, readability, or
+    artifact defect.
+  - A new formalization scope is explicitly approved.

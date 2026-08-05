@@ -243,7 +243,7 @@
     },
     {
       "id": "T-0028",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "size": "M",
       "after": [
         "T-0027"
