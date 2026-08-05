@@ -1,0 +1,22 @@
+{
+  "paper_sources": [
+    "2309.02332v3.pdf"
+  ],
+  "latex_archive": null,
+  "lean_root": "IPNPCNS",
+  "lakefile": "lakefile.toml",
+  "lean_toolchain": "lean-toolchain",
+  "claim_ledger": "FORMALIZATION-CLAIMS.md",
+  "source_audit": "SOURCE-AUDIT.md",
+  "verification_record": "wotan/dev-log/T-0028.md",
+  "scientific_report_source": "reports/scientific-formalization-report.tex",
+  "scientific_report_pdf": "output/pdf/ipnpcns-scientific-formalization-report.pdf",
+  "process_report_source": "reports/formalization-process-history.tex",
+  "process_report_pdf": "output/pdf/ipnpcns-formalization-process-history.pdf",
+  "readme": "README.md",
+  "verification_commands": [
+    "lake build",
+    "python /path/to/formalize-math-paper/scripts/check_project.py . --stage publication"
+  ],
+  "artifact_sha256": {}
+}

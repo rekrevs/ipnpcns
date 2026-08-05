@@ -89,6 +89,13 @@ model, an exact orthonormal wavelet example, a compact causal Volterra
 filter, a quantified membrane-update remainder, and conditional
 population-level realization theorems.
 
+A second purpose is methodological. The report follows one central identity
+from paper notation to an exact Lean declaration and explains enough of the
+language and trusted checker for a non-Lean reader to inspect the claim. It
+also distinguishes source mathematics from explicit formalization choices,
+new supporting lemmas, constructive strengthenings, and concrete models added
+by the Lean development.
+
 The verification has a precise boundary. It proves mathematical consequences
 of explicit assumptions; it does not prove that biological neural
 populations satisfy those assumptions. Stochastic learning, generic
@@ -181,6 +188,72 @@ made for it. \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+Verification status and source provenance answer different questions. A
+theorem may be fully verified while still being a new strengthening supplied
+by the formalization; conversely, a formula may be copied directly from the
+paper but remain outside the verified scope. The following provenance
+vocabulary is therefore used independently of \cref{tab:status}.
+
+\begin{table}[htbp]
+\centering
+\caption{Provenance of mathematics in the formal development.}
+\label{tab:provenance}
+\begin{tabularx}{\linewidth}{@{}L{32mm}Y@{}}
+\toprule
+\textbf{Provenance} & \textbf{Meaning} \\
+\midrule
+Paper claim & A definition, equation, or theorem stated in the paper and
+represented without material change. \\
+Explicit interpretation & A domain, closure, sign, boundary, or regularity
+condition left implicit in prose and made visible in the formal statement. \\
+Formalization lemma & New mathematical infrastructure or decomposition used
+to reach a source claim, but not attributed to the paper. \\
+Strengthening & A new result that implies, quantifies, or extends the source
+claim; its additional content belongs to the formalization. \\
+Concrete realization & A particular finite or analytic model that satisfies
+an informal interface. It demonstrates consistency and consequences, not
+empirical truth or uniqueness of interpretation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\Cref{tab:provenance-map} gives the high-level division. This division is not
+cosmetic: it prevents a machine-checked theorem newly discovered during
+formalization from being retrospectively presented as a theorem of the paper.
+
+\begin{center}
+\small
+\refstepcounter{table}
+\label{tab:provenance-map}
+\textbf{Table \thetable:} Where the principal mathematical content originates.\par
+\vspace{0.5em}
+\begin{tabularx}{\linewidth}{@{}L{31mm}Y Y@{}}
+\toprule
+\textbf{Layer} & \textbf{From the paper} & \textbf{Added or made explicit in Lean} \\
+\midrule
+Closed-cone algebra & Closed conic hull, polar, projection, rejection,
+double rejection, and intersection formulas & A closure-safe representation,
+the complete metric-projection and Moreau lemma stack, and named pointwise-to-hull
+lifting lemmas \\
+Finite subspaces & Matrix and Moore--Penrose renderings of projection,
+rejection, and comparison & A general rectangular pseudoinverse construction
+from the effective map, including all four Penrose equations and uniqueness \\
+Learning & NNLS objective, projected update, and informal convergence under
+``standard assumptions'' & Exact KKT equivalence and separate full-rank and
+rank-deficient deterministic convergence theorems; stochastic convergence is
+not supplied \\
+Signals & Finite-window signal and filter equations, wavelet example, and
+low-pass approximation & A selected \(L^2\) boundary convention, compact causal
+Volterra model, exact orthonormality proofs, and a quantified quadratic membrane
+remainder \\
+Occupancy and populations & Occupancy approximation, overlap heuristic, active
+faces, and circuit equations & An exact finite sampling experiment, uniform
+exponential error bound, independent product construction, and sufficient
+active-face certificates \\
+\bottomrule
+\end{tabularx}
+\end{center}
 
 \section{From population messages to Hilbert-space geometry}
 \label{sec:model}
@@ -318,28 +391,115 @@ layer; it does not convert model interpretation into biological evidence.}
 \section{What the machine check means}
 \label{sec:lean}
 
-\subsection{Proofs as checked objects}
+\subsection{From paper prose to a checked declaration}
 
 Lean is an interactive theorem prover based on dependent type theory
-\cite{demoura2015lean}. A proposition is represented by a type, and a proof is
-a term inhabiting that type. Tactics help construct proof terms, but the small
-kernel checks the final term independently of the tactic that produced it.
-The mathematical library mathlib supplies definitions and previously checked
-theorems for Hilbert spaces, convexity, measure theory, matrices, topology,
-and finite combinatorics \cite{mathlib2020}.
+\cite{demoura2015lean}. The useful operational picture is simpler than that
+foundation may suggest. A \emph{definition} assigns an exact meaning to a
+name. A \emph{theorem declaration} states a proposition as a type. Its proof
+is a term of that type. Commands called \emph{tactics} help construct the
+term, an \emph{elaborator} resolves notation and omitted arguments, and a small
+\emph{kernel} independently checks the fully explicit result. The mathematical
+library mathlib contributes previously checked definitions and theorems for
+Hilbert spaces, convexity, measure theory, matrices, topology, and finite
+combinatorics \cite{mathlib2020}.
 
-For example, the formal headline theorem has the following readable shape:
+The paper's double-rejection identity provides a running example. In the
+notation of this report it says
+\[
+  A\cproj B=A\crej(A\crej B).
+\]
+Before this can be a Lean proposition, every symbol must have a fixed type and
+meaning. The project first declares the two operations:
+
+\begin{lstlisting}[style=leanstyle,language={},caption={Definitions behind the running example, with a helper name inlined.}]
+def coneProjection (A B : ClosedCone H) : ClosedCone H :=
+  conicHull (metricProjection B '' (A : Set H))
+
+def coneRejection (A B : ClosedCone H) : ClosedCone H :=
+  coneProjection A (polar B)
+\end{lstlisting}
+
+Thus projection of one cone onto another is not assumed to be a cone: the
+pointwise image is deliberately wrapped in the norm-closed conic hull.
+Rejection is projection onto the paper's non-positive polar. These choices are
+the formal contract for source equations (73)--(75), (98), and (108).
+
+The public theorem then reads:
 
 \begin{lstlisting}[style=leanstyle,language={},caption={The public Lean endpoint for double rejection.}]
 theorem doubleRejection (A B : ClosedCone H) :
   coneProjection A B =
-    coneRejection A (coneRejection A B)
+    coneRejection A (coneRejection A B) := by
+  -- prove both inclusions between the two closed cones
+  apply le_antisymm
+  ...
 \end{lstlisting}
 
-Here \(H\) is already declared to be a complete real inner-product space.
-The colon separates the theorem name and parameters from the proposition
-being proved. The declaration contains no algorithm for numerically computing
-the projection. It is a proof of an extensional equality of closed cones.
+The parameters \(A\) and \(B\) are closed convex cones in a previously declared
+space \(H\). The type-class assumptions on \(H\), printed elsewhere as bracketed
+arguments, say that it is a complete real inner-product space. The first colon
+separates the theorem's parameters from its proposition; \texttt{:= by} begins
+the proof. Equality here is extensional: the two closed cones have exactly the
+same members. The line \texttt{apply le\_antisymm} reduces equality of ordered
+cone objects to the two inclusions. Later \texttt{rw} steps replace a metric
+projection using a proved pointwise lemma. The ellipsis abbreviates this report's
+listing, not the checked file: the source contains the complete proof and no
+placeholder.
+
+\subsection{What is translated, and what is designed}
+
+The route from the printed equation to the theorem is not mechanical textual
+translation. It has five inspectable stages:
+
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Source reading.} The PDF and LaTeX source identify the intended
+    operations, the non-positive polar convention, and the generality of closed
+    cones in a Hilbert space.
+  \item \textbf{Mathematical restatement.} The equation is separated from its
+    biological interpretation and written as equality of closed cones.
+  \item \textbf{Representation design.} \texttt{ClosedCone H},
+    \texttt{conicHull}, \texttt{polar}, \texttt{coneProjection}, and
+    \texttt{coneRejection} decide how the mathematics inhabits Lean and
+    mathlib. Closure and completeness become explicit.
+  \item \textbf{Proof architecture.} New formalization lemmas establish metric
+    projection and Moreau decomposition, prove the pointwise projection
+    identity, and lift equality of generator sets through the same closed-hull
+    constructor.
+  \item \textbf{Kernel certification.} Lean elaborates the declaration and proof
+    to a fully explicit term. The kernel checks that term against the imported
+    definitions and theorem types.
+\end{enumerate}
+
+Stages 1 and 2 aim to preserve paper mathematics. Stage 3 necessarily contains
+modeling and library-integration choices. Stage 4 contains genuine mathematics
+added by the formalization, even when its purpose is to prove a paper theorem.
+Stage 5 verifies derivability of the resulting contract. The independent source
+audit closes the loop from stage 5 back to stage 1.
+
+\begin{keyresult}[The guarantee for the running example]
+The kernel check establishes that, under the displayed Hilbert-space and
+closed-cone assumptions and the project's exact definitions, double rejection
+equals conic projection. The source audit establishes that this contract matches
+the relevant paper equations. Neither check establishes that a neural circuit
+implements the abstract operations or that the model is biologically adequate.
+\end{keyresult}
+
+\subsection{How library facts and local proofs compose}
+
+Imports are not appeals to an unchecked handbook. Lean records the types of the
+mathlib theorems used by a local proof, and the kernel checks the final term
+through that dependency graph. Some low-level implementation details remain in
+Lean's trusted computing base---the kernel, elaborated environment, compiler and
+runtime used to run the checker---but tactics themselves need not be trusted:
+a faulty tactic can fail or construct a rejected term, not make an invalid term
+pass the kernel.
+
+This distinction also explains the value of named helper lemmas. A declaration
+such as \texttt{metricProjection\_polar\_rejection\_eq} records the central
+pointwise step as a reusable mathematical interface. The public theorem can then
+be read as a short composition of checked facts rather than as a transcript of
+tactic search.
 
 \subsection{Classical and noncomputable mathematics}
 
@@ -380,6 +540,12 @@ The paper introduces subspaces before cones. This layer is not dispensable
 background: it fixes matrix orientation, projection signs, rejection
 conventions, and comparison measures in a setting where familiar linear
 algebra provides strong regression tests.
+
+\textbf{Provenance.} The matrix and subspace identities in this section are
+source claims. Their coordinate-free organization is a formalization choice;
+the rank-unrestricted Moore--Penrose construction and uniqueness proof are new
+supporting mathematics needed because the pinned library supplied no general
+matrix API.
 
 \subsection{Column spaces and the covariance rendering}
 
@@ -463,6 +629,12 @@ source.
 
 \section{Closed cones, metric projection, and Moreau decomposition}
 \label{sec:moreau}
+
+\textbf{Provenance.} The paper states the closed-cone and Moreau ingredients
+used by its algebra, with Moreau's theorem as classical background. The Lean
+project adds a complete local bridge from Hilbert projection to the exact sign
+and closure conventions required by the source; these bridge lemmas are not
+claimed as new content of the paper.
 
 \subsection{Metric projection}
 
@@ -562,6 +734,12 @@ finite-dimensional even when \(H\) is infinite-dimensional.
 
 \section{The two headline cone identities}
 \label{sec:headline}
+
+\textbf{Provenance.} The double-rejection and intersection identities are the
+paper's headline mathematical claims. The pointwise projection lemma,
+closed-hull lifting argument, and decomposition into reusable order lemmas are
+formalization contributions that certify those claims without changing their
+generality.
 
 \subsection{Projection by two rejections}
 
@@ -671,6 +849,11 @@ primitives, one standalone reflection, and closed cone sums.
 
 \section{Comparison and approximate invariance}
 \label{sec:approximation}
+
+\textbf{Provenance.} The comparison and deterministic invariance formulas come
+from the paper. Lean makes coverage and margin hypotheses explicit and proves
+the scalar and Gram inequalities; it does not add the omitted random-embedding
+law that would generate those hypotheses.
 
 \subsection{Comparing two cones}
 
@@ -800,6 +983,12 @@ explicit deterministic geometric premises.
 \section{Signals, filters, and membrane dynamics}
 \label{sec:signals}
 
+\textbf{Provenance.} The signal equations, wavelet parameters, and low-pass
+approximation are source material. Selecting restricted-measure Bochner
+\(L^2\), choosing causal truncation, constructing a compact Volterra operator,
+and replacing the \(O(\Delta t^2)\) term by a Lipschitz-based bound are explicit
+formalization choices and strengthenings.
+
 \subsection{The recording-window signal space}
 
 Lebesgue measure is restricted to the closed interval \([0,T]\). Scalar and
@@ -911,6 +1100,11 @@ The optimization layer uses the classical nonnegative least-squares problem
 convergence claims needed by the model instead of importing an algorithm as
 a black box.
 
+\textbf{Provenance.} The objective, clipped update, and learning interpretation
+come from the paper. The exact finite KKT equivalence and the two deterministic
+convergence packages are formalization contributions. No stochastic convergence
+theorem is attributed to either the source or the Lean development.
+
 \subsection{Finite objective, gradient, and projection}
 
 Let \(X\in\mathbb{R}^{n\times N}\), \(y\in\mathbb{R}^{N}\), and
@@ -1003,6 +1197,11 @@ formal interpretation, not footnotes to be discarded.
 \section{Finite collateral occupancy}
 \label{sec:occupancy}
 
+\textbf{Provenance.} The paper supplies the occupancy and overlap formulas as
+model calculations. The explicit uniform finite experiment, edge-case
+theorems, exponential approximation error bound, and independent product
+construction are constructive strengthenings added by the formalization.
+
 The occupancy calculation is formalized as a finite probability experiment,
 implemented by exact uniform averages over finite sets. One active axon
 chooses a \(p\)-element subset of \(n\) targets. A sample of \(m\) axons is a
@@ -1047,6 +1246,12 @@ independence and uniform marginals.
 
 \section{Population-level realization}
 \label{sec:population}
+
+\textbf{Provenance.} Active faces, population maps, and primitive circuits are
+source concepts. The finite KKT/Moreau certificate is a sufficient
+formalization lemma, while approximation quality, support selection, and
+biological implementation remain named premises rather than new theorems about
+neural tissue.
 
 \subsection{Active faces}
 

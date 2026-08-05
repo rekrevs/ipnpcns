@@ -225,7 +225,7 @@
     },
     {
       "id": "T-0026",
-      "status": "READY",
+      "status": "DONE",
       "size": "L",
       "after": [
         "T-0024"
@@ -234,12 +234,11 @@
     },
     {
       "id": "T-0027",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "size": "L",
       "after": [
         "T-0026"
       ],
-      "blocker": "Waiting for the revised scientific report to establish the final division of explanatory material.",
       "summary": "Make the formalization process history independently readable"
     },
     {
