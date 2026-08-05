@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "next_id": 26,
+  "next_id": 29,
   "tasks": [
     {
       "id": "T-0001",
@@ -222,6 +222,35 @@
         "T-0021"
       ],
       "summary": "Construct the independent two-message occupancy experiment"
+    },
+    {
+      "id": "T-0026",
+      "status": "READY",
+      "size": "L",
+      "after": [
+        "T-0024"
+      ],
+      "summary": "Revise the scientific report for Lean pedagogy and provenance"
+    },
+    {
+      "id": "T-0027",
+      "status": "BLOCKED",
+      "size": "L",
+      "after": [
+        "T-0026"
+      ],
+      "blocker": "Waiting for the revised scientific report to establish the final division of explanatory material.",
+      "summary": "Make the formalization process history independently readable"
+    },
+    {
+      "id": "T-0028",
+      "status": "BLOCKED",
+      "size": "M",
+      "after": [
+        "T-0027"
+      ],
+      "blocker": "Waiting for both revised report artifacts.",
+      "summary": "Publish and verify the revised report set"
     }
   ]
 }

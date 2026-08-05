@@ -1012,3 +1012,70 @@
   - A precise new stochastic, biological, analytic, or face-theoretic contract is
     supplied.
   - Independent review finds a theorem, abstraction, source-mapping, or report defect.
+
+## PCR-2026-08-05-001
+
+- Record type: review
+- Date: 2026-08-05
+- Mode: direction-review
+- Trigger: The owner read both final reports and identified two communication defects:
+  the scientific report teaches too little about how paper claims become checked Lean
+  statements and does not make the paper-to-formalization contribution boundary visible
+  enough, while the process history assumes familiarity with local Wotan and Project
+  Control terminology.
+- Control judgement: redirect, operate, preserve
+- Current gate: The mathematical corpus and source audit remain closed and verified.
+  The limiting issue is now reader comprehension and preservation of the reusable
+  paper-to-Lean method.
+- Recommendation: Reopen only the publication layer. Revise the scientific report with
+  a running source-to-Lean example, a compact Lean primer, and explicit provenance and
+  formalization-delta categories. Revise the process history with an early, tool-neutral
+  account of the project environment and vocabulary. Then rebuild, inspect, hash, and
+  publish both reports. Preserve the general workflow separately as the
+  `formalize-math-paper` skill in the owner's consolidated agent-configuration repository.
+- Owner decision required: Approve, modify, or reject the three-part documentation and
+  skill-preservation program.
+- Evidence:
+  - Owner observations of 2026-08-05
+  - `reports/scientific-formalization-report.tex`
+  - `reports/formalization-process-history.tex`
+  - `wotan/dev-log/T-0023.md`
+  - `wotan/dev-log/T-0024.md`
+  - `SOURCE-AUDIT.md`
+  - `reports/process-history-evidence.md`
+- Uncertainty:
+  - Additional explanation will increase page count and must not obscure the scientific
+    argument or turn either report into a software manual.
+  - No independent external cold reader is part of this revision; self-containment must
+    therefore be checked explicitly from the rendered artifacts.
+- Proposed actions:
+  - Create T-0026 for the scientific-report revision.
+  - Create T-0027 for the process-history revision after T-0026.
+  - Create T-0028 for final publication verification after both reports are stable.
+- Revisit when:
+  - Both revised PDFs pass compilation, extraction, structural, integrity, and complete
+    page-by-page visual review.
+  - The reusable skill has encoded the improved report contracts and verification gates.
+
+## PCD-2026-08-05-001
+
+- Record type: decision
+- Date: 2026-08-05
+- Decides review: `PCR-2026-08-05-001`
+- Owner: Sverker Janson
+- Decision: Approve the complete program in one continuous run: revise both reports as
+  recommended; consolidate global Codex and Claude instructions, shared agent principles,
+  Wotan, and Project Control in the renamed `agent-config` repository; create and install
+  the versioned `formalize-math-paper` skill; rebuild and verify all artifacts; and commit
+  and publish the resulting repositories.
+- Disposition: approved
+- Resulting Wotan tasks: `T-0026`, `T-0027`, `T-0028`
+- Portfolio signal: The project is receiving a bounded publication-quality revision;
+  mathematical proof expansion remains closed.
+- Related records:
+  - `wotan/dev-log/T-0026.md`
+  - `wotan/dev-log/T-0027.md`
+  - `wotan/dev-log/T-0028.md`
+- Revisit when:
+  - T-0028 completes the revised report publication gate.
+  - Independent review later identifies another mathematical, source, or audience defect.
